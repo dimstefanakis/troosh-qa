@@ -30,8 +30,9 @@ const Home: NextPage = () => {
         <Flex
           width={"100%"}
           justifyContent={"center"}
-          alignItems={"center"}
+          // alignItems={"center"}
           height={"50%"}
+          marginTop={"101px"}
         >
           <Button
             backgroundColor={"#FFD29B"}
