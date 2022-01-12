@@ -1,13 +1,18 @@
 import React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { chakra, Textarea, TextareaProps } from "@chakra-ui/react";
-import ResizeTextarea from "react-textarea-autosize";
 import styles from "../styles/Home.module.css";
-import { Flex, Box, Text, Stack, Input, Button, Image } from "@chakra-ui/react";
+import { Flex, Button, Image } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-// import QuestionInput from "../src/features/QuestionInput";
-import { SyntheticEvent } from "react";
+import QuestionInput from "../src/features/QuestionInput";
+
+interface SearchButtonsProps {
+  question: string;
+}
+
+interface ButtonMatchProps {
+  question: string;
+}
 
 const Home: NextPage = () => {
   const [question, setQuestion] = useState("");
@@ -22,8 +27,8 @@ const Home: NextPage = () => {
           width="100%"
         >
           <QuestionHeader />
-          <LandingQuestionInput question={question} setQuestion={setQuestion} />
-          <SearchButtons question={question} setQuestion={setQuestion}/>
+          <QuestionInput setQuestion={setQuestion} />
+          <SearchButtons question={question} />
         </Flex>
       </Flex>
     </>
@@ -46,41 +51,8 @@ function QuestionHeader() {
   );
 }
 
-function LandingQuestionInput({ question, setQuestion }: any) {
-  let questionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    let inputQuestion = event.target.value;
-    setQuestion(inputQuestion);
-  };
-  // useEffect(() => {
-
-  //   return () => {
-
-  //   }
-  // }, [question])
-
-  return (
-    <Flex marginTop="90px" width="100%" maxW="80%" fontSize="xl">
-      <Textarea
-        variant="unstyled"
-        minH="unset"
-        overflow="hidden"
-        w="100%"
-        resize="none"
-        minRows={1}
-        onChange={questionChange}
-        as={ResizeTextarea}
-        placeholder="Is my deadlift form correct? How do I change a light bulb?"
-        textAlign="center"
-        size=""
-      />
-    </Flex>
-  );
-}
-
-function ButtonMatch({ question, setQuestion }: any) {
+function ButtonMatch({ question }: ButtonMatchProps) {
   const handleClick = () => {
-    // let newQuestion = question;
-    // setQuestion(question);
     console.log(question);
   };
 
@@ -130,7 +102,7 @@ function ButtonViewPeople() {
   );
 }
 
-function SearchButtons({ question, setQuestion }: any) {
+function SearchButtons({ question }: SearchButtonsProps) {
   return (
     <Flex
       width="100%"
@@ -139,7 +111,7 @@ function SearchButtons({ question, setQuestion }: any) {
       height="50%"
       marginTop="100px"
     >
-      <ButtonMatch question={question} setQuestion={setQuestion}/>
+      <ButtonMatch question={question} />
       <ButtonViewPeople />
     </Flex>
   );
