@@ -5,12 +5,15 @@ import { chakra, Textarea, TextareaProps } from "@chakra-ui/react";
 import ResizeTextarea from "react-textarea-autosize";
 import styles from "../styles/Home.module.css";
 import { Flex, Box, Text, Stack, Input, Button, Image } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
 // import QuestionInput from "../src/features/QuestionInput";
+import { SyntheticEvent } from "react";
 
 const Home: NextPage = () => {
+  const [question, setQuestion] = useState("");
+
   return (
     <>
-      <Image src="/logo_new.png" ml="198px" mt="42px" height="50px" borderRadius="100px"/>
       <Flex justifyContent="center">
         <Flex
           flexDirection="column"
@@ -18,20 +21,20 @@ const Home: NextPage = () => {
           alignItems="center"
           width="100%"
         >
-          <Header />
-          <QuestionInput />
-          <SearchButtons />
+          <QuestionHeader />
+          <LandingQuestionInput question={question} setQuestion={setQuestion} />
+          <SearchButtons question={question} setQuestion={setQuestion}/>
         </Flex>
       </Flex>
     </>
   );
 };
 
-function Header() {
+function QuestionHeader() {
   return (
     <Flex
       fontSize="3xl"
-      marginTop="55px"
+      marginTop="170px"
       maxWidth="400px"
       height="25%"
       justifyContent="center"
@@ -43,7 +46,18 @@ function Header() {
   );
 }
 
-function QuestionInput() {
+function LandingQuestionInput({ question, setQuestion }: any) {
+  let questionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    let inputQuestion = event.target.value;
+    setQuestion(inputQuestion);
+  };
+  // useEffect(() => {
+
+  //   return () => {
+
+  //   }
+  // }, [question])
+
   return (
     <Flex marginTop="90px" width="100%" maxW="80%" fontSize="xl">
       <Textarea
@@ -53,6 +67,7 @@ function QuestionInput() {
         w="100%"
         resize="none"
         minRows={1}
+        onChange={questionChange}
         as={ResizeTextarea}
         placeholder="Is my deadlift form correct? How do I change a light bulb?"
         textAlign="center"
@@ -62,9 +77,16 @@ function QuestionInput() {
   );
 }
 
-function ButtonMatch() {
+function ButtonMatch({ question, setQuestion }: any) {
+  const handleClick = () => {
+    // let newQuestion = question;
+    // setQuestion(question);
+    console.log(question);
+  };
+
   return (
     <Button
+      onClick={handleClick}
       backgroundColor="#FFD29B"
       _hover={{ bg: "#f5c68c" }}
       variant="solid"
@@ -108,7 +130,7 @@ function ButtonViewPeople() {
   );
 }
 
-function SearchButtons() {
+function SearchButtons({ question, setQuestion }: any) {
   return (
     <Flex
       width="100%"
@@ -117,7 +139,7 @@ function SearchButtons() {
       height="50%"
       marginTop="100px"
     >
-      <ButtonMatch />
+      <ButtonMatch question={question} setQuestion={setQuestion}/>
       <ButtonViewPeople />
     </Flex>
   );

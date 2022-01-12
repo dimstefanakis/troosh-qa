@@ -1,27 +1,30 @@
 import { Flex } from "@chakra-ui/react";
-
+import Header from "../Header";
 interface LayoutProps {
   children: JSX.Element;
 }
 
 function Layout({ children }: LayoutProps) {
   return (
-    <Flex
-      w="100%"
-      justifyContent="center"
-      alignItems="center"
-      flexFlow="column"
-    >
+    <>
+      <Header />
       <Flex
         w="100%"
-        maxW="600px"
         justifyContent="center"
         alignItems="center"
         flexFlow="column"
       >
-        {children}
+        <Flex
+          w="100%"
+          maxW="600px"
+          justifyContent="center"
+          alignItems="center"
+          flexFlow="column"
+        >
+          {children}
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 }
 
