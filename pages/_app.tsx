@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
+import Layout from '../src/flat/Layout';
 
 interface MyAppProps {
   children: JSX.Element;
@@ -24,7 +25,9 @@ function AppWrapper({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <MyApp>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </MyApp>
     </ChakraProvider>
   );
