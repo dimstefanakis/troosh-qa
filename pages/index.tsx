@@ -2,7 +2,7 @@ import React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { Flex, Button, Image, LinkOverlay } from "@chakra-ui/react";
+import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import QuestionInput from "../src/features/QuestionInput";
 
@@ -57,27 +57,29 @@ function ButtonMatch({ question }: ButtonMatchProps) {
   };
 
   return (
-    <LinkOverlay href="/results">
-      <Button
-        onClick={handleClick}
-        backgroundColor="#FFD29B"
-        _hover={{ bg: "#f5c68c" }}
-        variant="solid"
-        borderRadius="50px"
-        fontSize="xl"
-        height="70px"
-        width="200px"
-        whiteSpace="normal"
-        m={2}
-        _active={{
-          bg: "#f7c17e",
-          // transform: "scale(0.98)",
-          // borderColor: "#bec3c9",
-        }}
-      >
-        Match me with someone
-      </Button>
-    </LinkOverlay>
+    <LinkBox>
+      <LinkOverlay href="/results">
+        <Button
+          onClick={handleClick}
+          backgroundColor="#FFD29B"
+          _hover={{ bg: "#f5c68c" }}
+          variant="solid"
+          borderRadius="50px"
+          fontSize="xl"
+          height="70px"
+          width="200px"
+          whiteSpace="normal"
+          m={2}
+          _active={{
+            bg: "#f7c17e",
+            // transform: "scale(0.98)",
+            // borderColor: "#bec3c9",
+          }}
+        >
+          Match me with someone
+        </Button>
+      </LinkOverlay>
+    </LinkBox>
   );
 }
 
