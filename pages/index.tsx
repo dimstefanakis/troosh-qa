@@ -39,7 +39,6 @@ function QuestionHeader() {
   return (
     <Flex
       fontSize="3xl"
-      marginTop="170px"
       maxWidth="400px"
       height="25%"
       justifyContent="center"

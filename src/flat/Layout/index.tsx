@@ -13,6 +13,7 @@ function Layout({ children }: LayoutProps) {
         justifyContent="center"
         alignItems="center"
         flexFlow="column"
+        marginTop="170px"
       >
         <Flex
           w="100%"

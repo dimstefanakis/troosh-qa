@@ -1,44 +1,65 @@
 import { Flex, Image, Text, Box } from "@chakra-ui/react";
 
-function Match({ icon, name, expertise, description }: any) {
+interface PersonProps {
+  icon: string;
+  name: string;
+  expertise: string;
+  description: string;
+}
+
+const mockDescription = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
+              porttitor enim eget nisi accumsan, ut faucibus massa auctor. Ut a
+              pharetra quam, quis pulvinar lacus.`;
+const mockImage =
+  "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
+
+function Match() {
   return (
     <>
       <QuestionChoice />
-      <People name="Solo Bolo" expertise="heyaasdasd" />
-      <People name="Solo Bolo" expertise="heyaasdasd" />
+      <Person
+        name="Solo Bolo"
+        expertise="heyaasdasd"
+        icon={mockImage}
+        description={mockDescription}
+      />
+      <Person
+        name="Solo Bolo"
+        expertise="heyaasdasd"
+        icon={mockImage}
+        description={mockDescription}
+      />
     </>
   );
 }
 
-function People({ icon, name, expertise, description }: any) {
+function Person({ icon, name, expertise, description }: PersonProps) {
   return (
     <>
       <Box
         marginBottom="40px"
-        maxWidth="600px"
-        height="25%"
+        width="100%"
         justifyContent="center"
         alignItems="center"
       >
         <Flex>
           <Image
-            src="https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg"
+            src={icon}
             maxW="70px"
             maxH="70px"
             alt=""
-            borderRadius="256px"
+            borderRadius="100px"
             marginRight="20px"
           />
           <Flex flexDirection="column">
-            <Flex fontSize="18px" color="#565656" fontWeight="normal">
+            <Flex fontSize="lg" color="#565656" fontWeight="normal">
               {name}
             </Flex>
-            <Flex fontSize="25px" fontWeight="normal">
+            <Flex fontSize="2xl" fontWeight="normal">
               {expertise}
             </Flex>
-            <Flex maxW="400px" fontSize="20px" marginTop="10px" color="#565656">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-              euismod tellus non consectetur scelerisque.
+            <Flex fontSize="xl" marginTop={2} color="#565656">
+              {description}
             </Flex>
           </Flex>
         </Flex>
@@ -54,7 +75,6 @@ function QuestionChoice() {
         marginBottom="90px"
         fontWeight="800"
         fontSize="4xl"
-        marginTop="170px"
         maxWidth="450px"
         height="25%"
         justifyContent="center"
