@@ -9,7 +9,6 @@ interface PersonProps {
 }
 
 interface ExpertiseProps {
-  id: any;
   expertise: string;
 }
 
@@ -28,9 +27,9 @@ const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
 function Profile() {
-    const router = useRouter();
-    const { id } = router.query;
-    
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <>
       <Person
@@ -39,8 +38,10 @@ function Profile() {
         icon={mockImage}
         description={mockDescription}
       />
-      <Expertise id={id} expertise="Fitness Expert" />
-      <CommonQuestions />
+      <Box mt="80px">
+        <Expertise expertise="Fitness Expert" />
+        <CommonQuestions />
+      </Box>
     </>
   );
 }
@@ -61,6 +62,7 @@ function Person({ icon, name, description, id }: PersonProps) {
           alt=""
           borderRadius="100px"
           marginRight="20px"
+          border="2px solid black"
         />
         <Flex flexDirection="column">
           <Flex fontSize="xl" color="#565656" fontWeight="700">
@@ -75,10 +77,10 @@ function Person({ icon, name, description, id }: PersonProps) {
   );
 }
 
-function Expertise({ id, expertise }: ExpertiseProps) {
+function Expertise({ expertise }: ExpertiseProps) {
   return (
     <>
-      <Flex marginTop="100px" width="100%">
+      <Flex width="100%">
         <Flex fontSize="xl" color="#565656" fontWeight="700">
           Expertise
         </Flex>
@@ -87,8 +89,8 @@ function Expertise({ id, expertise }: ExpertiseProps) {
       <Flex width="100%">
         <Box
           backgroundColor="#FFD29B"
-          borderRadius="256px"
-          border="1px solid #000000"
+          borderRadius="100px"
+          border="2px solid #000000"
           marginTop="16px"
         >
           <Text
@@ -106,30 +108,6 @@ function Expertise({ id, expertise }: ExpertiseProps) {
   );
 }
 
-let loopQuestions = askedQuestions.map((item, index) => {
-  return (
-    <Flex width="100%" key={index} flexWrap="wrap">
-      <Flex
-        backgroundColor="#FFD29B"
-        borderRadius="20px"
-        border="1px solid #000000"
-        marginTop="16px"
-      >
-        <Text
-          borderRadius="100%"
-          paddingY="8px"
-          paddingX="20px"
-          fontSize="15px"
-          fontWeight="600"
-          width="100%"
-        >
-          {item}
-        </Text>
-      </Flex>
-    </Flex>
-  );
-});
-
 function CommonQuestions() {
   return (
     <>
@@ -138,7 +116,31 @@ function CommonQuestions() {
           Common Questions
         </Flex>
       </Flex>
-      {loopQuestions}
+      <Flex flexFlow="row wrap" justifyContent="space-between">
+        {askedQuestions.map((item, index) => {
+          return (
+            <Flex key={index}>
+              <Flex
+                backgroundColor="#FFD29B"
+                borderRadius="20px"
+                marginTop="16px"
+                border="2px solid #FFD29B"
+              >
+                <Text
+                  borderRadius="100%"
+                  paddingY="8px"
+                  paddingX="20px"
+                  fontSize="15px"
+                  fontWeight="600"
+                  width="100%"
+                >
+                  {item}
+                </Text>
+              </Flex>
+            </Flex>
+          );
+        })}
+      </Flex>
     </>
   );
 }

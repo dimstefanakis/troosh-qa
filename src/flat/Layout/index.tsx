@@ -13,11 +13,12 @@ function Layout({ children }: LayoutProps) {
         justifyContent="center"
         alignItems="center"
         flexFlow="column"
-        marginTop="170px"
+        paddingTop="170px"
+        paddingBottom="60px"
       >
         <Flex
           w="100%"
-          maxW="600px"
+          maxW="660px"
           justifyContent="center"
           alignItems="center"
           flexFlow="column"
