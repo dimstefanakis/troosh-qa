@@ -8,12 +8,20 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+import { useState,useEffect } from "react";
+ 
 function Page4() {
+    const [loading,setLoading] = useState(false)
+    useEffect(() => {
+        console.log(loading);
+        
+    }, [loading])
   return (
     <>
       <WhenHeader />
-      <NowAnswer />
-      <LaterAnswer />
+      <NowAnswer loading={loading} setLoading={setLoading} />
+      {/* <LaterAnswer /> */}
+      {loading == false ? <LaterAnswer /> : <NowSearch />}
     </>
   );
 }
@@ -34,10 +42,17 @@ function WhenHeader() {
   );
 }
 
-function NowAnswer() {
+function NowAnswer({loading,setLoading}:any) {
+    const handleClick=()=>{
+        // setLoading = "true"? "false" : "false"
+        setLoading(!loading)
+        // console.log(loading);
+    }
+    
   return (
     <Flex marginTop="250px">
       <Button
+       onClick={handleClick}
         backgroundColor="#FFD29B"
         _hover={{ bg: "#f5c68c" }}
         variant="solid"
@@ -129,6 +144,20 @@ function LaterAnswer() {
       </Flex>
     </>
   );
+}
+
+function NowSearch(){
+    return (
+      <Flex
+        fontSize="2xl"
+        color="#555555;"
+        marginTop="50px"
+        maxW="400px"
+        textAlign="center"
+      >
+        Looking for currently available mentors...
+      </Flex>
+    );
 }
 
 export default Page4;
