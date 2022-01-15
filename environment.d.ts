@@ -2,6 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       STRIPE_PUBLIC_KEY: string;
+      API_URL: string;
     }
   }
 }
