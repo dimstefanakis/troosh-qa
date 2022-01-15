@@ -3,7 +3,7 @@ import { questionSlice } from "./features/Question/questionSlice";
 
 export const store = configureStore({
   reducer: {
-    theme: questionSlice.reducer,
+    question: questionSlice.reducer,
   },
 });
 

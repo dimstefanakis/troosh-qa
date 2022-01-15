@@ -1,24 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Textarea } from "@chakra-ui/react";
 import ResizeTextarea from "react-textarea-autosize";
-import { Flex} from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { Flex } from "@chakra-ui/react";
+import { useSelector, useDispatch } from "react-redux";
+import { setQuestion } from "../Question/questionSlice";
+import {RootState} from '../../store';
 
-interface QuestionInputProps {
-  setQuestion: React.Dispatch<React.SetStateAction<string>>;
-}
 
-function QuestionInput({ setQuestion }: QuestionInputProps) {
+function QuestionInput() {
+  const dispatch = useDispatch();
+
+  // ACCESS TO QUESTION HERE
+  const { question } = useSelector((state: RootState) => state.question);
+
   let questionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    let inputQuestion = event.target.value;
-    setQuestion(inputQuestion);
+    dispatch(setQuestion(event.target.value));
   };
-  // useEffect(() => {
-
-  //   return () => {
-
-  //   }
-  // }, [question])
 
   return (
     <Flex marginTop="90px" width="100%" maxW="80%" fontSize="xl">

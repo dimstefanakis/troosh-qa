@@ -27,7 +27,7 @@ const Home: NextPage = () => {
           width="100%"
         >
           <QuestionHeader />
-          <QuestionInput setQuestion={setQuestion} />
+          <QuestionInput />
           <SearchButtons question={question} />
         </Flex>
       </Flex>
