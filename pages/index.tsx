@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import QuestionInput from "../src/features/QuestionInput";
+import ProgressBar from '../src/features/ProgressBar';
 
 interface SearchButtonsProps {
   question: string;
@@ -19,6 +20,8 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <ProgressBar />
+
       <Flex justifyContent="center">
         <Flex
           flexDirection="column"
