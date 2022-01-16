@@ -1,4 +1,5 @@
-import { Flex, Image, Text, Box, LinkBox,LinkOverlay } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
 
 interface PersonProps {
   icon: string;
@@ -36,41 +37,44 @@ function Match() {
   );
 }
 
-function Person({ icon, name, expertise, description , id}: PersonProps) {
+function Person({ icon, name, expertise, description, id }: PersonProps) {
+  const router = useRouter();
+
+  function onPersonClick() {
+    router.push(`/mentor/${id}`);
+  }
   return (
     <>
-      <LinkBox>
-        <LinkOverlay href={`/mentor/${id}`}>
-          <Box
-            marginBottom="40px"
-            width="100%"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Flex>
-              <Image
-                src={icon}
-                maxW="70px"
-                maxH="70px"
-                alt=""
-                borderRadius="100px"
-                marginRight="20px"
-              />
-              <Flex flexDirection="column">
-                <Flex fontSize="lg" color="#565656" fontWeight="normal">
-                  {name}
-                </Flex>
-                <Flex fontSize="2xl" fontWeight="normal">
-                  {expertise}
-                </Flex>
-                <Flex fontSize="xl" marginTop={2} color="#565656">
-                  {description}
-                </Flex>
-              </Flex>
+      <Box
+        onClick={onPersonClick}
+        marginBottom="40px"
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+        cursor="pointer"
+      >
+        <Flex>
+          <Image
+            src={icon}
+            maxW="70px"
+            maxH="70px"
+            alt=""
+            borderRadius="100px"
+            marginRight="20px"
+          />
+          <Flex flexDirection="column">
+            <Flex fontSize="lg" color="#565656" fontWeight="normal">
+              {name}
             </Flex>
-          </Box>
-        </LinkOverlay>
-      </LinkBox>
+            <Flex fontSize="2xl" fontWeight="normal">
+              {expertise}
+            </Flex>
+            <Flex fontSize="xl" marginTop={2} color="#565656">
+              {description}
+            </Flex>
+          </Flex>
+        </Flex>
+      </Box>
     </>
   );
 }

@@ -1,9 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface QuestionStateInterface {
+  question: string;
+}
+
 export const questionSlice = createSlice({
   name: "question",
-  initialState: {
-    question: null,
+  initialState: <QuestionStateInterface>{
+    question: '',
   },
   reducers: {
     setQuestion: (state, action) => {

@@ -10,17 +10,15 @@ import {
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { RootState } from "../../src/store";
+import { RootState } from "../src/store";
+import ProgressBar from "../src/features/ProgressBar";
 
-
-function Page4() {
+function WhenPage() {
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
   return (
     <>
+      <ProgressBar />
       <WhenHeader />
       <NowAnswer loading={loading} setLoading={setLoading} />
       {/* <LaterAnswer /> */}
@@ -30,47 +28,44 @@ function Page4() {
 }
 
 function WhenHeader() {
+  const { question } = useSelector((state: RootState) => state.question);
+
   return (
     <Flex
-      fontSize="3xl"
       maxWidth="400px"
       height="25%"
       justifyContent="center"
       alignItems="center"
       textAlign="center"
-      fontWeight="700"
+      flexFlow="column"
     >
-      When do you need an answer?
+      <Text fontWeight="700" fontSize="3xl">
+        {question}
+      </Text>
+      <Text mt={20}>
+        I need an answer
+      </Text>
     </Flex>
   );
 }
 
-const ApiPost = (quest:any) => {
-  
-  axios
-  .post(
-    `${process.env.API_URL}/v1/ask_question/`,
-    JSON.stringify({ body: quest })
-    )
-    .then((res) => {
-      console.log(res.data);
-    });
-};
 function NowAnswer({ loading, setLoading }: any) {
-  const handleClick = () => {
-    // setLoading = "true"? "false" : "false"
-    setLoading(!loading);
-    // console.log(loading);
-  };
-
   const { question } = useSelector((state: RootState) => state.question);
-  const onClick = () => {
 
-    ApiPost(question);
-    handleClick();
+  const onClick = () => {
+    const formData = new FormData();
+    formData.append("body", question);
+
+    setLoading(true);
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/v1/ask_question/`, formData)
+      .then((res) => {
+        console.log(res.data);
+      });
   };
+
   return (
-    <Flex marginTop="250px">
+    <Flex mt={5}>
       <Button
         onClick={onClick}
         backgroundColor="#FFD29B"
@@ -97,10 +92,10 @@ function NowAnswer({ loading, setLoading }: any) {
 function LaterAnswer() {
   return (
     <>
-      <Flex marginTop="35px">
+      <Flex mt={5}>
         <Flex width="100%">
           <Button
-            onClick={ApiPost}
+            // onClick={ApiPost}
             backgroundColor="#AAF0D1"
             _hover={{ bg: "#91e9c2" }}
             variant="solid"
@@ -116,13 +111,12 @@ function LaterAnswer() {
               // borderColor: "#bec3c9",
             }}
           >
-            {" "}
             6 hours from now
           </Button>
         </Flex>
         <Flex width="100%">
           <Button
-            onClick={ApiPost}
+            // onClick={ApiPost}
             backgroundColor="#AAF0D1"
             _hover={{ bg: "#91e9c2" }}
             variant="solid"
@@ -138,13 +132,12 @@ function LaterAnswer() {
               // borderColor: "#bec3c9",
             }}
           >
-            {" "}
             12 hours from now
           </Button>
         </Flex>
         <Flex width="100%">
           <Button
-            onClick={ApiPost}
+            // onClick={ApiPost}
             backgroundColor="#AAF0D1"
             _hover={{ bg: "#91e9c2" }}
             variant="solid"
@@ -160,7 +153,6 @@ function LaterAnswer() {
               // borderColor: "#bec3c9",
             }}
           >
-            {" "}
             24 hours from now
           </Button>
         </Flex>
@@ -183,4 +175,4 @@ function NowSearch() {
   );
 }
 
-export default Page4;
+export default WhenPage;

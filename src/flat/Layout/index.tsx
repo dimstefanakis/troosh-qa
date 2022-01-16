@@ -13,7 +13,7 @@ function Layout({ children }: LayoutProps) {
         justifyContent="center"
         alignItems="center"
         flexFlow="column"
-        paddingTop="170px"
+        paddingTop="120px"
         paddingBottom="60px"
       >
         <Flex

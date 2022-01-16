@@ -19,7 +19,14 @@ interface StepDotProps {
 
 function ProgressBar() {
   return (
-    <Flex justifyContent="center" alignItems="center" w="100%" h="25px" position="relative">
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      w="100%"
+      h="25px"
+      position="relative"
+      mb={10}
+    >
       <BackgroundBar />
       <Flex w="100%" justifyContent="space-between">
         <StepDot step={0} />
@@ -35,17 +42,19 @@ function StepDot({ step }: StepDotProps) {
 
   return (
     <Box
-      h="20px"
-      w="20px"
-      backgroundColor={step == currentStep ? "orange" : "gray"}
-      border={`5px solid ${step == currentStep ? "orange" : "gray"}`}
+      zIndex={1}
+      h="25px"
+      w="25px"
+      backgroundColor={step == currentStep ? "#FFD29B" : "white"}
+      borderRadius="100%"
+      border={`5px solid ${step == currentStep ? "#FFD29B" : "#AAF0D1"}`}
     ></Box>
   );
 }
 
 function BackgroundBar() {
   return (
-    <Box w="100%" h="20px" backgroundColor="#A0E7C8" position="absolute"></Box>
+    <Box w="100%" h="20px" backgroundColor="#A0E7C8" position="absolute" borderRadius="100px"></Box>
   );
 }
 

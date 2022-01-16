@@ -1,13 +1,14 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
 import QuestionInput from "../src/features/QuestionInput";
-import ProgressBar from '../src/features/ProgressBar';
+import ProgressBar from "../src/features/ProgressBar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../src/store";
+import styles from "../styles/Home.module.css";
 
 interface SearchButtonsProps {
   question: string;
@@ -17,14 +18,12 @@ interface ButtonMatchProps {
   question: string;
 }
 
-
 const Home: NextPage = () => {
   const { question } = useSelector((state: RootState) => state.question);
 
   return (
     <>
       <ProgressBar />
-
       <Flex justifyContent="center">
         <Flex
           flexDirection="column"
@@ -56,34 +55,34 @@ function QuestionHeader() {
   );
 }
 
-function ButtonMatch({ question }: ButtonMatchProps) {
+function ButtonMatch() {
+  const router = useRouter();
+
   const handleClick = () => {
-    console.log(question);
+    router.push('/when');
   };
 
   return (
     <LinkBox>
-      <LinkOverlay href="/when">
-        <Button
-          onClick={handleClick}
-          backgroundColor="#FFD29B"
-          _hover={{ bg: "#f5c68c" }}
-          variant="solid"
-          borderRadius="50px"
-          fontSize="xl"
-          height="70px"
-          width="200px"
-          whiteSpace="normal"
-          m={2}
-          _active={{
-            bg: "#f7c17e",
-            // transform: "scale(0.98)",
-            // borderColor: "#bec3c9",
-          }}
-        >
-          Match me with someone
-        </Button>
-      </LinkOverlay>
+      <Button
+        onClick={handleClick}
+        backgroundColor="#FFD29B"
+        _hover={{ bg: "#f5c68c" }}
+        variant="solid"
+        borderRadius="50px"
+        fontSize="xl"
+        height="70px"
+        width="200px"
+        whiteSpace="normal"
+        m={2}
+        _active={{
+          bg: "#f7c17e",
+          // transform: "scale(0.98)",
+          // borderColor: "#bec3c9",
+        }}
+      >
+        Match me with someone
+      </Button>
     </LinkBox>
   );
 }
@@ -120,7 +119,7 @@ function SearchButtons({ question }: SearchButtonsProps) {
       height="50%"
       marginTop="100px"
     >
-      <ButtonMatch question={question} />
+      <ButtonMatch />
       <ButtonViewPeople />
     </Flex>
   );
