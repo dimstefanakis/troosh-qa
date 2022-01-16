@@ -32,14 +32,14 @@ function WhenHeader() {
 
   return (
     <Flex
-      maxWidth="400px"
+      width="100%"
       height="25%"
       justifyContent="center"
       alignItems="center"
       textAlign="center"
       flexFlow="column"
     >
-      <Text fontWeight="700" fontSize="3xl">
+      <Text fontWeight="700" fontSize="3xl" width="100%">
         {question}
       </Text>
       <Text mt={20}>
