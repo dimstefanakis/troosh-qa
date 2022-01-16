@@ -5,6 +5,8 @@ import styles from "../styles/Home.module.css";
 import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import QuestionInput from "../src/features/QuestionInput";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../src/store";
 
 interface SearchButtonsProps {
   question: string;
@@ -14,8 +16,9 @@ interface ButtonMatchProps {
   question: string;
 }
 
+
 const Home: NextPage = () => {
-  const [question, setQuestion] = useState("");
+  const { question } = useSelector((state: RootState) => state.question);
 
   return (
     <>
@@ -57,7 +60,7 @@ function ButtonMatch({ question }: ButtonMatchProps) {
 
   return (
     <LinkBox>
-      <LinkOverlay href="/results">
+      <LinkOverlay href="/when">
         <Button
           onClick={handleClick}
           backgroundColor="#FFD29B"
