@@ -1,5 +1,9 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
+import { setStep } from "../src/features/Progress/progressSlice";
+
 
 interface PersonProps {
   icon: string;
@@ -16,6 +20,12 @@ const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
 function Match() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setStep(2));
+  }, []);
+
   return (
     <>
       <QuestionChoice />

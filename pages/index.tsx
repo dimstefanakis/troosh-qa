@@ -1,13 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
-import Head from "next/head";
 import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
+import { useSelector, useDispatch } from "react-redux";
 import QuestionInput from "../src/features/QuestionInput";
 import ProgressBar from "../src/features/ProgressBar";
-import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../src/store";
+import { setStep } from "../src/features/Progress/progressSlice";
 import styles from "../styles/Home.module.css";
 
 interface SearchButtonsProps {
@@ -19,7 +20,12 @@ interface ButtonMatchProps {
 }
 
 const Home: NextPage = () => {
+  const dispatch = useDispatch();
   const { question } = useSelector((state: RootState) => state.question);
+
+  useEffect(() => {
+    dispatch(setStep(0));
+  }, []);
 
   return (
     <>

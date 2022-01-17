@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Flex,
   Image,
@@ -9,12 +10,17 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { setStep } from "../src/features/Progress/progressSlice";
 import { RootState } from "../src/store";
 import ProgressBar from "../src/features/ProgressBar";
 
 function WhenPage() {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    dispatch(setStep(1));
+  }, [])
 
   return (
     <>
@@ -42,7 +48,7 @@ function WhenHeader() {
       <Text fontWeight="700" fontSize="3xl" width="100%">
         {question}
       </Text>
-      <Text mt={20}>
+      <Text mt={20} color="gray">
         I need an answer
       </Text>
     </Flex>
