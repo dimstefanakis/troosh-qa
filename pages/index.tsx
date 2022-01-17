@@ -1,23 +1,15 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect }  from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionInput from "../src/features/QuestionInput";
 import ProgressBar from "../src/features/ProgressBar";
 import { RootState } from "../src/store";
 import { setStep } from "../src/features/Progress/progressSlice";
 import styles from "../styles/Home.module.css";
-
-interface SearchButtonsProps {
-  question: string;
-}
-
-interface ButtonMatchProps {
-  question: string;
-}
 
 const Home: NextPage = () => {
   const dispatch = useDispatch();
@@ -39,7 +31,7 @@ const Home: NextPage = () => {
         >
           <QuestionHeader />
           <QuestionInput />
-          <SearchButtons question={question} />
+          <SearchButtons />
         </Flex>
       </Flex>
     </>
@@ -56,7 +48,7 @@ function QuestionHeader() {
       alignItems="center"
       textAlign="center"
     >
-      Got a question? Get live answers.
+      Got a question? Get answers from mentors.
     </Flex>
   );
 }
@@ -116,18 +108,34 @@ function ButtonViewPeople() {
   );
 }
 
-function SearchButtons({ question }: SearchButtonsProps) {
+function SearchButtons() {
+  const { question } = useSelector((state: RootState) => state.question);
+  const [buttonsVisible, setButtonsVisible] = useState(false);
+
+  useEffect(()=>{
+    setButtonsVisible(question.length > 0);
+  }, [question])
+
   return (
-    <Flex
-      width="100%"
-      justifyContent="center"
-      // alignItems={"center"}
-      height="50%"
-      marginTop="100px"
-    >
-      <ButtonMatch />
-      <ButtonViewPeople />
-    </Flex>
+    <AnimatePresence>
+      {buttonsVisible && (
+        <motion.div
+          style={{width: '100%', marginTop: 100}}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <Flex
+            width="100%"
+            height="100%"
+            justifyContent="center"
+          >
+            <ButtonMatch />
+            <ButtonViewPeople />
+          </Flex>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

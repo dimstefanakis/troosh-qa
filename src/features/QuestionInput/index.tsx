@@ -4,8 +4,7 @@ import ResizeTextarea from "react-textarea-autosize";
 import { Flex } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { setQuestion } from "../Question/questionSlice";
-import {RootState} from '../../store';
-
+import { RootState } from "../../store";
 
 function QuestionInput() {
   const dispatch = useDispatch();
@@ -18,18 +17,19 @@ function QuestionInput() {
   };
 
   return (
-    <Flex marginTop="90px" width="100%" maxW="80%" fontSize="xl">
+    <Flex marginTop="90px" width="100%" maxW="400px" fontSize="xl">
       <Textarea
         variant="unstyled"
         minH="unset"
         overflow="hidden"
         w="100%"
+        minHeight="300px"
         resize="none"
         minRows={1}
         onChange={questionChange}
         as={ResizeTextarea}
-        placeholder="Is my deadlift form correct? How do I change a light bulb?"
-        textAlign="center"
+        placeholder={`If I want to maximize tricep development and want to do it with 2 movements in addition to bench and OHP, are dips and overhead cable tricep extension good choices?\n\nWhich global state management can I use with React Query?`}
+        // textAlign="center"
         size=""
       />
     </Flex>
