@@ -13,14 +13,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { setStep } from "../src/features/Progress/progressSlice";
 import { RootState } from "../src/store";
 import ProgressBar from "../src/features/ProgressBar";
+import { useRouter } from "next/router";
 
 function WhenPage() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(setStep(1));
-  }, [])
+  }, []);
 
   return (
     <>
@@ -96,12 +97,23 @@ function NowAnswer({ loading, setLoading }: any) {
 }
 
 function LaterAnswer() {
+  const { question } = useSelector((state: RootState) => state.question);
+
+  const handleClick = (time:any) => {
+    const formData = new FormData();
+    formData.append("body", question);
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/v1/ask_question/`, formData)
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
   return (
     <>
       <Flex mt={5}>
         <Flex width="100%">
           <Button
-            // onClick={ApiPost}
+            onClick={handleClick}
             backgroundColor="#AAF0D1"
             _hover={{ bg: "#91e9c2" }}
             variant="solid"
@@ -122,7 +134,7 @@ function LaterAnswer() {
         </Flex>
         <Flex width="100%">
           <Button
-            // onClick={ApiPost}
+            onClick={handleClick}
             backgroundColor="#AAF0D1"
             _hover={{ bg: "#91e9c2" }}
             variant="solid"
@@ -143,7 +155,7 @@ function LaterAnswer() {
         </Flex>
         <Flex width="100%">
           <Button
-            // onClick={ApiPost}
+            onClick={handleClick}
             backgroundColor="#AAF0D1"
             _hover={{ bg: "#91e9c2" }}
             variant="solid"
@@ -168,6 +180,10 @@ function LaterAnswer() {
 }
 
 function NowSearch() {
+  const router = useRouter()
+  setTimeout(function(){
+    router.push("/results")
+  },5000)
   return (
     <Flex
       fontSize="2xl"
