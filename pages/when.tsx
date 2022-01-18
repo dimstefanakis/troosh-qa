@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setStep } from "../src/features/Progress/progressSlice";
 import { RootState } from "../src/store";
 import ProgressBar from "../src/features/ProgressBar";
+import { useRouter } from "next/router";
 
 function WhenPage() {
   const dispatch = useDispatch();
@@ -179,6 +180,10 @@ function LaterAnswer() {
 }
 
 function NowSearch() {
+  const router = useRouter()
+  setTimeout(function(){
+    router.push("/results")
+  },5000)
   return (
     <Flex
       fontSize="2xl"

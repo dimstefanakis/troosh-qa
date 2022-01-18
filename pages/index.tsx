@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
@@ -57,37 +57,41 @@ function ButtonMatch() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/when');
+    router.push("/when?match");
   };
 
   return (
-    <LinkBox>
-      <Button
-        onClick={handleClick}
-        backgroundColor="#FFD29B"
-        _hover={{ bg: "#f5c68c" }}
-        variant="solid"
-        borderRadius="50px"
-        fontSize="xl"
-        height="70px"
-        width="200px"
-        whiteSpace="normal"
-        m={2}
-        _active={{
-          bg: "#f7c17e",
-          // transform: "scale(0.98)",
-          // borderColor: "#bec3c9",
-        }}
-      >
-        Match me with someone
-      </Button>
-    </LinkBox>
+    <Button
+      onClick={handleClick}
+      backgroundColor="#FFD29B"
+      _hover={{ bg: "#f5c68c" }}
+      variant="solid"
+      borderRadius="50px"
+      fontSize="xl"
+      height="70px"
+      width="200px"
+      whiteSpace="normal"
+      m={2}
+      _active={{
+        bg: "#f7c17e",
+        // transform: "scale(0.98)",
+        // borderColor: "#bec3c9",
+      }}
+    >
+      Match me with someone
+    </Button>
   );
 }
 
 function ButtonViewPeople() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/when?view");
+  };
   return (
     <Button
+      onClick={handleClick}
       backgroundColor="#AAF0D1"
       _hover={{ bg: "#91e9c2" }}
       variant="solid"
@@ -112,24 +116,20 @@ function SearchButtons() {
   const { question } = useSelector((state: RootState) => state.question);
   const [buttonsVisible, setButtonsVisible] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     setButtonsVisible(question.length > 0);
-  }, [question])
+  }, [question]);
 
   return (
     <AnimatePresence>
       {buttonsVisible && (
         <motion.div
-          style={{width: '100%', marginTop: 100}}
+          style={{ width: "100%", marginTop: 100 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <Flex
-            width="100%"
-            height="100%"
-            justifyContent="center"
-          >
+          <Flex width="100%" height="100%" justifyContent="center">
             <ButtonMatch />
             <ButtonViewPeople />
           </Flex>
