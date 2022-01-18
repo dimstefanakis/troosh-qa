@@ -5,6 +5,8 @@ declare global {
       NEXT_PUBLIC_STRIPE_PUBLIC_KEY: string;
       API_URL: string;
       NEXT_PUBLIC_API_URL: string;
+      DOMAIN_URL: string;
+      NEXT_PUBLIC_DOMAIN_URL: string;
     }
   }
 }
