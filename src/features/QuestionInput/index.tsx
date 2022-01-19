@@ -5,6 +5,7 @@ import { Flex } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { setQuestion } from "../Question/questionSlice";
 import { RootState } from "../../store";
+import styles from "./QuestionInput.module.css";
 
 function QuestionInput() {
   const dispatch = useDispatch();
@@ -17,13 +18,18 @@ function QuestionInput() {
   };
 
   return (
-    <Flex marginTop="90px" width="100%" maxW="400px" fontSize="xl">
+    <Flex
+      marginTop="90px"
+      width="100%"
+      maxW="400px"
+      fontSize="xl"
+      className={question.length > 0 ? "" : styles.textareaContainer}
+    >
       <Textarea
         variant="unstyled"
         minH="unset"
         overflow="hidden"
         w="100%"
-        minHeight="300px"
         resize="none"
         minRows={1}
         onChange={questionChange}
