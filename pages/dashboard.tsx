@@ -17,7 +17,6 @@ import SecondaryButton from "../src/flat/SecondaryButton";
 import { useRouter } from "next/router";
 import { useMediaQuery } from "@chakra-ui/react";
 
-
 function Dashboard() {
   return (
     <>
@@ -44,19 +43,16 @@ function DashboardText() {
 }
 
 function TabsBtn() {
-    const [isSmallerThan767]=useMediaQuery("(max-width:767px)")
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const router = useRouter();
 
   const invClick = () => {
     router.push("/dashboard?tab=invitation");
   };
 
-
-    const profClick = () => {
-      router.push("/dashboard?tab=profile");
-    };
-
-   
+  const profClick = () => {
+    router.push("/dashboard?tab=profile");
+  };
 
   return (
     <Box marginTop="100px" width="100%" marginLeft="50px">
@@ -71,10 +67,10 @@ function TabsBtn() {
           marginRight="60px"
           marginLeft="30px"
         >
-          <Tab maxH="50px" fontSize="l" onClick={profClick}>
+          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
             Profile
           </Tab>
-          <Tab maxH="50px" fontSize="l" onClick={invClick}>
+          <Tab maxH="50px" fontSize="xl" onClick={invClick}>
             Invitations
           </Tab>
         </TabList>
@@ -108,17 +104,25 @@ function InvTab() {
   return (
     <>
       <Flex>
-        <Box>
+        <Box fontWeight="600">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id
           orci metus. Vestibulum sit amet odio in metus sagittis blandit.
           Aliquam vehicula tortor vitae odio varius finibus.
         </Box>
       </Flex>
       <Flex marginTop="10px">
-        <Text color="#999999">For 12/12/2022 6:00PM</Text>
+        <Text color="#999999" fontWeight="600">
+          For 12/12/2022 6:00PM
+        </Text>
       </Flex>
       <Flex marginTop="20px" marginBottom="40px">
-        <PrimaryButton borderRadius="26" fontSize="l" m="0" marginTop="10px">
+        <PrimaryButton
+          borderRadius="26"
+          fontSize="l"
+          m="0"
+          marginTop="10px"
+          fontWeight="600"
+        >
           Accept
         </PrimaryButton>
         <SecondaryButton
@@ -127,6 +131,7 @@ function InvTab() {
           m="0"
           marginLeft="1"
           marginTop="10px"
+          fontWeight="600"
         >
           Decline
         </SecondaryButton>
@@ -138,9 +143,11 @@ function InvTab() {
 function ProfTab() {
   return (
     <Flex>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id orci
-      metus. Vestibulum sit amet odio in metus sagittis blandit. Aliquam
-      vehicula tortor vitae odio varius finibus.2
+      <Box fontWeight="600">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id orci
+        metus. Vestibulum sit amet odio in metus sagittis blandit. Aliquam
+        vehicula tortor vitae odio varius finibus.2
+      </Box>
     </Flex>
   );
 }
