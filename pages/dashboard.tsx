@@ -15,6 +15,8 @@ import {
 import PrimaryButton from "../src/flat/PrimaryButton";
 import SecondaryButton from "../src/flat/SecondaryButton";
 import { useRouter } from "next/router";
+import { useMediaQuery } from "@chakra-ui/react";
+
 
 function Dashboard() {
   return (
@@ -42,25 +44,27 @@ function DashboardText() {
 }
 
 function TabsBtn() {
+    const [isSmallerThan767]=useMediaQuery("(max-width:767px)")
   const router = useRouter();
 
   const invClick = () => {
     router.push("/dashboard?tab=invitation");
   };
 
-    const router2 = useRouter();
 
     const profClick = () => {
-      router2.push("/dashboard?tab=profile");
+      router.push("/dashboard?tab=profile");
     };
-  
+
+   
+
   return (
     <Box marginTop="100px" width="100%" marginLeft="50px">
       <Tabs
         variant="soft-rounded"
         color="#AAF0D1"
         colorScheme="green"
-        orientation="vertical"
+        orientation={isSmallerThan767 ? "horizontal" : "vertical"}
       >
         <TabList
           aria-orientation="vertical"
@@ -74,11 +78,23 @@ function TabsBtn() {
             Invitations
           </Tab>
         </TabList>
-        <TabPanels color="black" borderLeft="2px solid #999999" width="100%">
-          <TabPanel paddingLeft="50px">
+        <TabPanels
+          color="black"
+          borderLeft={
+            isSmallerThan767 ? "0px solid #999999" : "2px solid #999999"
+          }
+          width="100%"
+        >
+          <TabPanel
+            marginLeft={isSmallerThan767 ? "20px" : "30px"}
+            width="100%"
+          >
             <ProfTab />
           </TabPanel>
-          <TabPanel paddingLeft="50px">
+          <TabPanel
+            marginLeft={isSmallerThan767 ? "20px" : "30px"}
+            width="100%"
+          >
             <InvTab />
             <InvTab />
           </TabPanel>
