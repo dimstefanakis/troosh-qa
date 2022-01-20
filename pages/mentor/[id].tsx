@@ -1,5 +1,6 @@
 import { Flex, Box, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import CheckoutButton from '../../src/features/CheckoutButton';
 
 interface PersonProps {
   icon: string;
@@ -38,6 +39,9 @@ function Profile() {
         icon={mockImage}
         description={mockDescription}
       />
+      <Box width="100%">
+        <CheckoutButton rate={30}/>
+      </Box>
       <Box mt="80px">
         <Expertise expertise="Fitness Expert" />
         <CommonQuestions />
