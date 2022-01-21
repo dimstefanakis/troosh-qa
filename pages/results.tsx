@@ -24,7 +24,7 @@ function Match() {
   const [mentorResults, setMentorResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // get all of the for now
+  // get all of the mentors for now
   async function fetchMentors() {
     try {
       setLoading(true);
