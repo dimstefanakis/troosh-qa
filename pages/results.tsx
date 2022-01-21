@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { setStep } from "../src/features/Progress/progressSlice";
+import { RootState } from "../src/store";
 import axios from "axios";
 
 interface PersonProps {
@@ -107,6 +108,8 @@ function Person({ icon, name, expertise, description, id }: PersonProps) {
 }
 
 function QuestionChoice() {
+  const {question} = useSelector((state: RootState)=>state.question);
+
   return (
     <Flex>
       <Text
@@ -119,7 +122,7 @@ function QuestionChoice() {
         alignItems="center"
         textAlign="center"
       >
-        Can someone show me if my deadlift form is good?
+        {question}
       </Text>
     </Flex>
   );

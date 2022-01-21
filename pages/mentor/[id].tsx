@@ -1,6 +1,8 @@
+import { useState, useEffect } from "react";
 import { Flex, Box, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import CheckoutButton from '../../src/features/CheckoutButton';
+import axios from "axios";
+import CheckoutButton from "../../src/features/CheckoutButton";
 
 interface PersonProps {
   icon: string;
@@ -29,25 +31,45 @@ const mockImage =
 
 function Profile() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [mentor, setMentor] = useState<any>(null);
   const { id } = router.query;
 
-  return (
+  async function getMentor() {
+    try {
+      setLoading(true);
+      let response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/${id}/`
+      );
+      setLoading(false);
+      setMentor(response.data);
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getMentor();
+  }, []);
+
+  return mentor ? (
     <>
       <Person
-        id={id}
-        name="Name"
-        icon={mockImage}
-        description={mockDescription}
+        id={mentor?.surrogate}
+        name={mentor?.name}
+        icon={mentor?.avatar}
+        description={mentor?.bio}
       />
       <Box width="100%">
-        <CheckoutButton rate={30}/>
+        <CheckoutButton rate={mentor?.qa_session_credit} mentor={mentor} />
       </Box>
       <Box mt="80px">
-        <Expertise expertise="Fitness Expert" />
+        <Expertise expertise={mentor?.expertise_field} />
         <CommonQuestions />
       </Box>
     </>
-  );
+  ) : null;
 }
 
 function Person({ icon, name, description, id }: PersonProps) {
