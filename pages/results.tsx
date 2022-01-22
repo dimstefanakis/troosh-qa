@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import ResultsSkeleton from "../src/flat/ResultsSkeleton";
@@ -24,37 +25,32 @@ const mockImage =
 
 function Match() {
   const dispatch = useDispatch();
-  const [mentorResults, setMentorResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-
+  const {isLoading, error, data} = useQuery('fetchMentors', fetchMentors);
+  
   // get all of the mentors for now
   async function fetchMentors() {
     try {
-      setLoading(true);
       let response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/`
       );
-      setLoading(false);
-      setMentorResults(response.data);
+      return response.data;
     } catch (e) {
       console.error(e);
-      setLoading(false);
     }
   }
 
   useEffect(() => {
     dispatch(setStep(1));
-    fetchMentors();
   }, []);
 
   return (
     <Box w="100%">
       <ProgressBar />
       <QuestionChoice />
-      {loading ? (
+      {isLoading ? (
         <ResultsSkeleton />
       ) : (
-        mentorResults.map((mentor: any) => {
+        data.map((mentor: any) => {
           return (
             <React.Fragment key={mentor.surrogate}>
               <Person
