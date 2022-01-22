@@ -3,6 +3,7 @@ import { Flex, Box, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import CheckoutButton from "../../src/features/CheckoutButton";
+import MentorProfileSkeleton from '../../src/flat/MentorProfileSkeleton';
 
 interface PersonProps {
   icon: string;
@@ -69,7 +70,9 @@ function Profile() {
         <CommonQuestions />
       </Box>
     </>
-  ) : null;
+  ) : (
+    <MentorProfileSkeleton />
+  );
 }
 
 function Person({ icon, name, description, id }: PersonProps) {
