@@ -56,8 +56,10 @@ function Profile() {
 
   useEffect(() => {
     dispatch(setStep(2));
-    getMentor();
-  }, []);
+    if(id){
+      getMentor();
+    }
+  }, [id]);
 
   return mentor ? (
     <>
