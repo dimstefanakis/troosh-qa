@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import ResultsSkeleton from "../src/flat/ResultsSkeleton";
+import ProgressBar from "../src/features/ProgressBar";
 import { setStep } from "../src/features/Progress/progressSlice";
 import { RootState } from "../src/store";
 import axios from "axios";
@@ -42,12 +43,13 @@ function Match() {
   }
 
   useEffect(() => {
-    dispatch(setStep(2));
+    dispatch(setStep(1));
     fetchMentors();
   }, []);
 
   return (
     <Box w="100%">
+      <ProgressBar />
       <QuestionChoice />
       {loading ? (
         <ResultsSkeleton />

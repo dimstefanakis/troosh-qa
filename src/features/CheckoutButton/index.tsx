@@ -63,10 +63,13 @@ function CheckoutButton({ rate, mentor }: CheckoutButtonProps) {
       <Flex justifyContent="center" alignItems="center" mt={10}>
         <TimeSelect timeNeeded={timeNeeded} setTimeNeeded={setTimeNeeded} />
         <PrimaryButton w="45%" isLoading={loading} onClick={onCheckoutClick}>
-          Book for $
-          {mentor.qa_sessions.find(
-            (session: any) => session.minutes == parseInt(timeNeeded)
-          ).credit}
+          Book for {" "}
+          {
+            mentor.qa_sessions.find(
+              (session: any) => session.minutes == parseInt(timeNeeded)
+            ).credit
+          }
+          €
         </PrimaryButton>
       </Flex>
     </Flex>

@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Flex, Box, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import ProgressBar from "../../src/features/ProgressBar";
 import axios from "axios";
+import { setStep } from "../../src/features/Progress/progressSlice";
 import CheckoutButton from "../../src/features/CheckoutButton";
-import MentorProfileSkeleton from '../../src/flat/MentorProfileSkeleton';
+import MentorProfileSkeleton from "../../src/flat/MentorProfileSkeleton";
 
 interface PersonProps {
   icon: string;
@@ -31,6 +34,7 @@ const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
 function Profile() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mentor, setMentor] = useState<any>(null);
@@ -51,11 +55,13 @@ function Profile() {
   }
 
   useEffect(() => {
+    dispatch(setStep(2));
     getMentor();
   }, []);
 
   return mentor ? (
     <>
+      <ProgressBar />
       <Person
         id={mentor?.surrogate}
         name={mentor?.name}
@@ -71,7 +77,10 @@ function Profile() {
       </Box>
     </>
   ) : (
-    <MentorProfileSkeleton />
+    <>
+      <ProgressBar />
+      <MentorProfileSkeleton />
+    </>
   );
 }
 
