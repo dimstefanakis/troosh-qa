@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -11,6 +12,8 @@ import { store } from "../src/store";
 interface MyAppProps {
   children: JSX.Element;
 }
+
+const queryClient = new QueryClient();
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
@@ -29,17 +32,19 @@ function MyApp({ children }: MyAppProps) {
 
 function AppWrapper({ Component, pageProps }: AppProps) {
   return (
-    <Provider store={store}>
-      <Elements stripe={stripePromise}>
-        <ChakraProvider>
-          <MyApp>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </MyApp>
-        </ChakraProvider>
-      </Elements>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <Elements stripe={stripePromise}>
+          <ChakraProvider>
+            <MyApp>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </MyApp>
+          </ChakraProvider>
+        </Elements>
+      </Provider>
+    </QueryClientProvider>
   );
 }
 

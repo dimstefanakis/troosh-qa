@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Flex, Box, Image, Text } from "@chakra-ui/react";
+import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import ProgressBar from "../../src/features/ProgressBar";
@@ -36,45 +37,42 @@ const mockImage =
 function Profile() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [mentor, setMentor] = useState<any>(null);
   const { id } = router.query;
+  const { isLoading, error, data } = useQuery(["fetchMentor", id], () =>
+    getMentor(id)
+  );
 
-  async function getMentor() {
-    try {
-      setLoading(true);
-      let response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/${id}/`
-      );
-      setLoading(false);
-      setMentor(response.data);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
+  async function getMentor(id: any) {
+    if (id) {
+      try {
+        let response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/${id}/`
+        );
+        return response.data;
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
   useEffect(() => {
     dispatch(setStep(2));
-    if(id){
-      getMentor();
-    }
   }, [id]);
 
-  return mentor ? (
+  return data ? (
     <>
       <ProgressBar />
       <Person
-        id={mentor?.surrogate}
-        name={mentor?.name}
-        icon={mentor?.avatar}
-        description={mentor?.bio}
+        id={data.surrogate}
+        name={data.name}
+        icon={data.avatar}
+        description={data.bio}
       />
       <Box width="100%">
-        <CheckoutButton rate={mentor?.qa_session_credit} mentor={mentor} />
+        <CheckoutButton rate={data.qa_session_credit} mentor={data} />
       </Box>
       <Box mt="80px">
-        <Expertise expertise={mentor?.expertise_field} />
+        <Expertise expertise={data.expertise_field} />
         <CommonQuestions />
       </Box>
     </>
