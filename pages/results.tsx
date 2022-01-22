@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
+import ResultsSkeleton from "../src/flat/ResultsSkeleton";
 import { setStep } from "../src/features/Progress/progressSlice";
 import { RootState } from "../src/store";
 import axios from "axios";
@@ -46,22 +47,26 @@ function Match() {
   }, []);
 
   return (
-    <>
+    <Box w="100%">
       <QuestionChoice />
-      {mentorResults.map((mentor: any) => {
-        return (
-          <React.Fragment key={mentor.surrogate}>
-            <Person
-              id={mentor.surrogate}
-              name={mentor.name}
-              expertise={mentor.expertise_field}
-              icon={mentor.avatar}
-              description={mentor.bio}
-            />
-          </React.Fragment>
-        );
-      })}
-    </>
+      {loading ? (
+        <ResultsSkeleton />
+      ) : (
+        mentorResults.map((mentor: any) => {
+          return (
+            <React.Fragment key={mentor.surrogate}>
+              <Person
+                id={mentor.surrogate}
+                name={mentor.name}
+                expertise={mentor.expertise_field}
+                icon={mentor.avatar}
+                description={mentor.bio}
+              />
+            </React.Fragment>
+          );
+        })
+      )}
+    </Box>
   );
 }
 
@@ -74,6 +79,7 @@ function Person({ icon, name, expertise, description, id }: PersonProps) {
   return (
     <>
       <Box
+        p={3}
         onClick={onPersonClick}
         marginBottom="40px"
         width="100%"
