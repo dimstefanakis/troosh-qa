@@ -119,9 +119,8 @@ function QuestionChoice() {
       <Text
         marginBottom="90px"
         fontWeight="800"
+        width="100%"
         fontSize="4xl"
-        maxWidth="450px"
-        height="25%"
         justifyContent="center"
         alignItems="center"
         textAlign="center"
