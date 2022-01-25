@@ -78,7 +78,7 @@ function ButtonMatch() {
         // borderColor: "#bec3c9",
       }}
     >
-      Match me with someone
+      I'm feeling lucky
     </Button>
   );
 }
@@ -107,7 +107,7 @@ function ButtonViewPeople() {
       }}
       m={2}
     >
-      View all people
+      Explore mentors
     </Button>
   );
 }

@@ -1,9 +1,13 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
+import ResultsSkeleton from "../src/flat/ResultsSkeleton";
+import ProgressBar from "../src/features/ProgressBar";
 import { setStep } from "../src/features/Progress/progressSlice";
-
+import { RootState } from "../src/store";
+import axios from "axios";
 
 interface PersonProps {
   icon: string;
@@ -21,29 +25,46 @@ const mockImage =
 
 function Match() {
   const dispatch = useDispatch();
+  const {isLoading, error, data} = useQuery('fetchMentors', fetchMentors);
+  
+  // get all of the mentors for now
+  async function fetchMentors() {
+    try {
+      let response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/`
+      );
+      return response.data;
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   useEffect(() => {
-    dispatch(setStep(2));
+    dispatch(setStep(1));
   }, []);
 
   return (
-    <>
+    <Box w="100%">
+      <ProgressBar />
       <QuestionChoice />
-      <Person
-        id={1}
-        name="Solo Bolo"
-        expertise="heyaasdasd"
-        icon={mockImage}
-        description={mockDescription}
-      />
-      <Person
-        id={2}
-        name="Soloooo Bolo"
-        expertise="heyaasdasd"
-        icon={mockImage}
-        description={mockDescription}
-      />
-    </>
+      {isLoading ? (
+        <ResultsSkeleton />
+      ) : (
+        data.map((mentor: any) => {
+          return (
+            <React.Fragment key={mentor.surrogate}>
+              <Person
+                id={mentor.surrogate}
+                name={mentor.name}
+                expertise={mentor.expertise_field}
+                icon={mentor.avatar}
+                description={mentor.bio}
+              />
+            </React.Fragment>
+          );
+        })
+      )}
+    </Box>
   );
 }
 
@@ -56,6 +77,7 @@ function Person({ icon, name, expertise, description, id }: PersonProps) {
   return (
     <>
       <Box
+        p={3}
         onClick={onPersonClick}
         marginBottom="40px"
         width="100%"
@@ -90,19 +112,20 @@ function Person({ icon, name, expertise, description, id }: PersonProps) {
 }
 
 function QuestionChoice() {
+  const {question} = useSelector((state: RootState)=>state.question);
+
   return (
     <Flex>
       <Text
         marginBottom="90px"
         fontWeight="800"
+        width="100%"
         fontSize="4xl"
-        maxWidth="450px"
-        height="25%"
         justifyContent="center"
         alignItems="center"
         textAlign="center"
       >
-        Can someone show me if my deadlift form is good?
+        {question}
       </Text>
     </Flex>
   );

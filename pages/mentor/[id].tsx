@@ -1,6 +1,13 @@
+import { useState, useEffect } from "react";
 import { Flex, Box, Image, Text } from "@chakra-ui/react";
+import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-import CheckoutButton from '../../src/features/CheckoutButton';
+import { useDispatch } from "react-redux";
+import ProgressBar from "../../src/features/ProgressBar";
+import axios from "axios";
+import { setStep } from "../../src/features/Progress/progressSlice";
+import CheckoutButton from "../../src/features/CheckoutButton";
+import MentorProfileSkeleton from "../../src/flat/MentorProfileSkeleton";
 
 interface PersonProps {
   icon: string;
@@ -28,24 +35,51 @@ const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
 function Profile() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
+  const { isLoading, error, data } = useQuery(["fetchMentor", id], () =>
+    getMentor(id)
+  );
 
-  return (
+  async function getMentor(id: any) {
+    if (id) {
+      try {
+        let response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/${id}/`
+        );
+        return response.data;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
+  useEffect(() => {
+    dispatch(setStep(2));
+  }, [id]);
+
+  return data ? (
     <>
+      <ProgressBar />
       <Person
-        id={id}
-        name="Name"
-        icon={mockImage}
-        description={mockDescription}
+        id={data.surrogate}
+        name={data.name}
+        icon={data.avatar}
+        description={data.bio}
       />
       <Box width="100%">
-        <CheckoutButton rate={30}/>
+        <CheckoutButton rate={data.qa_session_credit} mentor={data} />
       </Box>
       <Box mt="80px">
-        <Expertise expertise="Fitness Expert" />
+        <Expertise expertise={data.expertise_field} />
         <CommonQuestions />
       </Box>
+    </>
+  ) : (
+    <>
+      <ProgressBar />
+      <MentorProfileSkeleton />
     </>
   );
 }
