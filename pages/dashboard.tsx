@@ -12,6 +12,7 @@ import {
   Tabs,
   TabPanels,
 } from "@chakra-ui/react";
+import ProfileDashboardTab from "../src/features/Dashboard/Profile";
 import PrimaryButton from "../src/flat/PrimaryButton";
 import SecondaryButton from "../src/flat/SecondaryButton";
 import { useRouter } from "next/router";
@@ -85,7 +86,7 @@ function TabsBtn() {
             marginLeft={isSmallerThan767 ? "20px" : "30px"}
             width="100%"
           >
-            <ProfTab />
+            <ProfileDashboardTab />
           </TabPanel>
           <TabPanel
             marginLeft={isSmallerThan767 ? "20px" : "30px"}

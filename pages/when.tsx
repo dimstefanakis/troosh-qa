@@ -72,7 +72,7 @@ function WhenPage() {
           <Flex>Now</Flex>
         </TimeButton>
       </Flex>
-      {loading == false ? (
+      {createQuestion.isLoading == false ? (
         <Flex mt={5}>
           <Flex width="100%">
             <TimeButton onClick={() => handleWhenClick("6")}>
