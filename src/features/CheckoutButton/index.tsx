@@ -47,7 +47,7 @@ function CheckoutButton({ rate, mentor }: CheckoutButtonProps) {
     }
   }
 
-  if (!question) {
+  if (!question.body) {
     return null;
   }
 
@@ -59,7 +59,7 @@ function CheckoutButton({ rate, mentor }: CheckoutButtonProps) {
       flexFlow="column"
       className={styles.checkoutContainer}
     >
-      <Text>{question}</Text>
+      <Text>{question.body}</Text>
       <Flex justifyContent="center" alignItems="center" mt={10}>
         <TimeSelect timeNeeded={timeNeeded} setTimeNeeded={setTimeNeeded} />
         <PrimaryButton w="45%" isLoading={loading} onClick={onCheckoutClick}>
