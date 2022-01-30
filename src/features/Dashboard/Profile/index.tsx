@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, VStack } from "@chakra-ui/layout";
-import { FormControl, FormLabel, Input, Textarea } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { Flex, Text, VStack, HStack } from "@chakra-ui/layout";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Textarea,
+  Select,
+} from "@chakra-ui/react";
+import { CloseButton } from "@chakra-ui/close-button";
 import {
   Formik,
   Form,
@@ -13,8 +23,11 @@ import {
 } from "formik";
 import InputMask from "react-input-mask";
 import { v4 as uuidv4 } from "uuid";
+import useChangeAvailabilityTimeRanges from "./hooks/useChangeAvailabilityTimeRanges";
+import { RootState } from "../../../store";
 import AddButton from "../../../flat/AddButton";
 import PrimaryButton from "../../../flat/PrimaryButton";
+import days from "./days.json";
 
 interface FormValues {
   name: string;
@@ -27,15 +40,57 @@ interface CommonQuestion {
   body: string;
 }
 
+interface AvailabilityTimeRange {
+  weekday: number;
+  start_time: string;
+  end_time: string;
+}
+
 function ProfileDashboardTab() {
-  const [name, setName] = useState<string>("");
-  const [bio, setBio] = useState<string>("");
-  const [commonQuestions, setCommonQuestions] = useState<CommonQuestion[]>([
-    {
-      id: "0",
-      body: "",
-    },
-  ]);
+  let today = new Date();
+  let time =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+  const { user } = useSelector((state: RootState) => state.authentication);
+  const availabilityMutation = useChangeAvailabilityTimeRanges();
+  console.log("user", user);
+  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [availableTimeRanges, setAvailableTimeRanges] = useState<
+    AvailabilityTimeRange[]
+  >(
+    user.coach.available_time_ranges
+      ? user.coach.available_time_ranges
+      : [
+          {
+            weekday: 1,
+            start_time: time,
+            end_time: time,
+          },
+        ]
+  );
+  const [name, setName] = useState<string>(user.subscriber.name);
+  const [bio, setBio] = useState<string>(user.coach.bio);
+  const [commonQuestions, setCommonQuestions] = useState<CommonQuestion[]>(
+    user.coach.common_questions
+      ? user.coach.common_questions.map((question: any) => ({
+          id: question.surrogate,
+          body: question.body,
+        }))
+      : [
+          {
+            id: "0",
+            body: "",
+          },
+        ]
+  );
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setBio(user.bio);
+      setAvailableTimeRanges(user.coach.available_time_ranges);
+    }
+  }, [user]);
 
   function handleSubmit(values: FormValues) {
     console.log("values", values);
@@ -61,11 +116,17 @@ function ProfileDashboardTab() {
     setCommonQuestions(newCommonQuestions);
   }
 
-  function handleRemoveCommonQuestion(id: string) {
-    let index = commonQuestions.findIndex((commonQuestion) => commonQuestion.id == id);
+  function handleRemoveCommonQuestion(id?: string) {
+    let index = commonQuestions.findIndex(
+      (commonQuestion) => commonQuestion.id == id
+    );
     let newCommonQuestions = [...commonQuestions];
     newCommonQuestions.splice(index, 1);
     setCommonQuestions(newCommonQuestions);
+  }
+
+  function handleDayChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedDay(parseInt(event.target.value));
   }
 
   return (
@@ -135,16 +196,26 @@ function ProfileDashboardTab() {
                     <VStack>
                       {commonQuestions.map((question) => {
                         return (
-                          <Input
-                            key={question.id}
-                            size="lg"
-                            id="commonQuestion"
-                            placeholder="John Doe"
-                            variant="filled"
-                            isRequired
-                            value={question.body}
-                            onChange={(e) => onTextChange(e, question.id)}
-                          />
+                          <InputGroup key={question.id} alignItems="center">
+                            <Input
+                              size="lg"
+                              id="commonQuestion"
+                              placeholder="John Doe"
+                              variant="filled"
+                              isRequired
+                              value={question.body}
+                              onChange={(e) => onTextChange(e, question.id)}
+                            />
+                            {commonQuestions.length > 1 && (
+                              <InputRightElement top="inherit">
+                                <CloseButton
+                                  onClick={() =>
+                                    handleRemoveCommonQuestion(question.id)
+                                  }
+                                />
+                              </InputRightElement>
+                            )}
+                          </InputGroup>
                         );
                       })}
                     </VStack>
@@ -161,6 +232,60 @@ function ProfileDashboardTab() {
                 )}
               </Field>
 
+              <FormLabel htmlFor="availability">Availability</FormLabel>
+
+              <Select
+                placeholder="Select option"
+                defaultValue="1"
+                onChange={handleDayChange}
+              >
+                {days.map((day) => {
+                  return <option value={day.value}>{day.label}</option>;
+                })}
+              </Select>
+              <VStack mt={3}>
+                {availableTimeRanges
+                  .filter(
+                    (timeRange: AvailabilityTimeRange) =>
+                      timeRange.weekday == selectedDay
+                  )
+                  .map((timeRange: AvailabilityTimeRange, i: number) => {
+                    return (
+                      <HStack>
+                        <InputGroup key={i} alignItems="center">
+                          <Input
+                            size="lg"
+                            id="commonQuestion"
+                            placeholder="John Doe"
+                            variant="filled"
+                            isRequired
+                            value={timeRange.start_time}
+                            // onChange={(e) => onTextChange(e, question.id)}
+                          />
+                        </InputGroup>
+                        <Text>to</Text>
+                        <InputGroup key={i} alignItems="center">
+                          <Input
+                            size="lg"
+                            id="commonQuestion"
+                            placeholder="John Doe"
+                            variant="filled"
+                            isRequired
+                            value={timeRange.end_time}
+                            // onChange={(e) => onTextChange(e, question.id)}
+                          />
+                          <InputRightElement top="inherit">
+                            <CloseButton
+                            // onClick={() =>
+                            //   handleRemoveCommonQuestion(question.id)
+                            // }
+                            />
+                          </InputRightElement>
+                        </InputGroup>
+                      </HStack>
+                    );
+                  })}
+              </VStack>
               <PrimaryButton mt={10} type="submit">
                 Save
               </PrimaryButton>
