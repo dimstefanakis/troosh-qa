@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import ResultsSkeleton from "../src/flat/ResultsSkeleton";
 import ProgressBar from "../src/features/ProgressBar";
 import { setStep } from "../src/features/Progress/progressSlice";
+import useGetQuestionAvailableMentors from "../src/features/Question/hooks/useGetQuestionAvailableMentors";
 import { RootState } from "../src/store";
 import axios from "axios";
 
@@ -25,19 +26,22 @@ const mockImage =
 
 function Match() {
   const dispatch = useDispatch();
-  const {isLoading, error, data} = useQuery('fetchMentors', fetchMentors);
-  
-  // get all of the mentors for now
-  async function fetchMentors() {
-    try {
-      let response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/coaches/`
-      );
-      return response.data;
-    } catch (e) {
-      console.error(e);
+  const {question} = useSelector((state:RootState)=>state.question);
+  const query = useQuery(
+    ["getQuestionAvailableMentors", question.id],
+    async () => {
+      if (question.id) {
+        try {
+          let response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/`
+          );
+          return response.data.available_coaches;
+        } catch (e) {
+          console.error(e);
+        }
+      }
     }
-  }
+  );
 
   useEffect(() => {
     dispatch(setStep(1));
@@ -47,10 +51,10 @@ function Match() {
     <Box w="100%">
       <ProgressBar />
       <QuestionChoice />
-      {isLoading ? (
+      {query.isLoading || !query.data ? (
         <ResultsSkeleton />
       ) : (
-        data.map((mentor: any) => {
+        query.data.map((mentor: any) => {
           return (
             <React.Fragment key={mentor.surrogate}>
               <Person
@@ -125,7 +129,7 @@ function QuestionChoice() {
         alignItems="center"
         textAlign="center"
       >
-        {question}
+        {question.body}
       </Text>
     </Flex>
   );

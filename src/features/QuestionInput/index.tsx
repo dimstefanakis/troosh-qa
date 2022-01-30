@@ -14,7 +14,7 @@ function QuestionInput() {
   const { question } = useSelector((state: RootState) => state.question);
 
   let questionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(setQuestion(event.target.value));
+    dispatch(setQuestion({ body: event.target.value }));
   };
 
   return (
@@ -23,7 +23,7 @@ function QuestionInput() {
       width="100%"
       maxW="400px"
       fontSize="xl"
-      className={question.length > 0 ? "" : styles.textareaContainer}
+      className={question.body.length > 0 ? "" : styles.textareaContainer}
     >
       <Textarea
         variant="unstyled"

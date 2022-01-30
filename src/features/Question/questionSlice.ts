@@ -1,17 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface QuestionStateInterface {
-  question: string;
+  question: QuestionInterface;
+}
+
+interface QuestionInterface {
+  body: string;
+  id?: string;
 }
 
 export const questionSlice = createSlice({
   name: "question",
   initialState: <QuestionStateInterface>{
-    question: '',
+    question: {
+      body: "",
+      id: "",
+    },
   },
   reducers: {
     setQuestion: (state, action) => {
-      state.question = action.payload;
+      state.question = {...state.question, ...action.payload}
     },
   },
 });

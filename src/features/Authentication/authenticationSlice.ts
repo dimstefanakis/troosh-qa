@@ -1,8 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../../store";
 import { PostLogin, PostRegister } from "./interface";
 import { AxiosResponse } from "axios";
 import axios from "axios";
+
+
+interface UserData {
+  token?: string | null;
+  user?: any;
+}
+
+interface State{
+  token?: string | null;
+  user?: any;
+  loading: boolean;
+  loadingUserData: boolean;
+}
 
 async function getTokens(data: PostLogin) {
   let response: AxiosResponse;
@@ -38,6 +52,42 @@ async function getTokens(data: PostLogin) {
   }
   return response.data.access;
 }
+
+export const getUserData = createAsyncThunk<
+  // Return type of the payload creator
+  UserData,
+  // First argument to the payload creator
+  undefined,
+  // Types for ThunkAPI
+  {
+    state: RootState;
+  }
+>("authentication/getUserData", async (_, thunkApi) => {
+  let userData = <UserData>{};
+  let userToken;
+  const authenticationState = thunkApi.getState().authentication;
+
+  try {
+    userToken = await localStorage.getItem("token");
+
+    userData.token = userToken;
+    //axios.defaults.withCredentials = true;
+    const token = userToken;
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+    if (userToken) {
+      userData.token = userToken;
+      let results = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/user/me/`
+      );
+      userData.user = results.data[0];
+    }
+  } catch (e) {
+    userData.token = null;
+    userData.user = null;
+  }
+  return userData;
+});
 
 export const login = createAsyncThunk(
   "authentication/login",
@@ -80,9 +130,11 @@ export const register = createAsyncThunk(
 
 export const authenticationSlice = createSlice({
   name: "authentication",
-  initialState: {
+  initialState: <State>{
     token: null,
+    user: null,
     loading: false,
+    loadingUserData: true,
   },
   reducers: {
     setupTokenInterceptor() {
@@ -122,6 +174,16 @@ export const authenticationSlice = createSlice({
     });
     builder.addCase(register.rejected, (state, { payload }) => {
       state.loading = false;
+    });
+    builder.addCase(getUserData.fulfilled, (state, { payload }) => {
+      state.user = payload.user;
+      state.loadingUserData = false;
+    });
+    builder.addCase(getUserData.pending, (state, { payload }) => {
+      state.loadingUserData = true;
+    });
+    builder.addCase(getUserData.rejected, (state, { payload }) => {
+      state.loadingUserData = false;
     });
   },
 });

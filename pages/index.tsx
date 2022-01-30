@@ -117,7 +117,7 @@ function SearchButtons() {
   const [buttonsVisible, setButtonsVisible] = useState(false);
 
   useEffect(() => {
-    setButtonsVisible(question.length > 0);
+    setButtonsVisible(question.body.length > 0);
   }, [question]);
 
   return (
@@ -130,7 +130,8 @@ function SearchButtons() {
           exit={{ opacity: 0 }}
         >
           <Flex width="100%" height="100%" justifyContent="center">
-            <ButtonMatch />
+            {/* Disable automatic match until I figure out how it should work */}
+            {/* <ButtonMatch /> */}
             <ButtonViewPeople />
           </Flex>
         </motion.div>
