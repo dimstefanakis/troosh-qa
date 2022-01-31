@@ -47,10 +47,10 @@ interface AvailabilityTimeRange {
   end_time: string;
 }
 
-function fillZeros(value: string){
+function fillZeros(value: string) {
   value = value.replaceAll(":", "");
   value = value + "0".repeat(4 - value.length);
-  
+
   // add a : every 2 characters
   value = value.replace(/(.{2})/g, "$1:");
 
@@ -110,6 +110,20 @@ function ProfileDashboardTab() {
 
   function handleSubmit(values: FormValues) {
     console.log("values", values);
+    let formattedTimeRanges = availableTimeRanges.map((timeRange) => {
+      let formattedTimeRange = { ...timeRange };
+      if (formattedTimeRange.end_time.length <= 5) {
+        formattedTimeRange.end_time += ":00";
+      }
+      if (formattedTimeRange.start_time.length <= 5) {
+        formattedTimeRange.start_time += ":00";
+      }
+      return formattedTimeRange;
+    });
+    let timeRangeDate = {
+      availability_ranges: formattedTimeRanges,
+    };
+    availabilityMutation.mutate(timeRangeDate);
   }
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>, id?: string) {
@@ -158,8 +172,11 @@ function ProfileDashboardTab() {
     if (foundTimeRangeIndex != -1) {
       let item = { ...newAvailabilityTimeRanges[foundTimeRangeIndex] };
       let value = fillZeros(e.currentTarget.value);
-      if(parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59){
-        return
+      if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
+        // check this for better UX
+        // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
+        e.preventDefault();
+        return false;
       }
       if (range == "start") {
         item.start_time = value;
@@ -169,6 +186,15 @@ function ProfileDashboardTab() {
       newAvailabilityTimeRanges[foundTimeRangeIndex] = item;
     }
     setAvailableTimeRanges(newAvailabilityTimeRanges);
+  }
+
+  function onTimeRangeKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    let value = fillZeros(e.currentTarget.value);
+    if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
+      // check this for better UX
+      // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
+      e.preventDefault();
+    }
   }
 
   function onTimeRangeRemove(id: string) {
@@ -185,8 +211,8 @@ function ProfileDashboardTab() {
     newTimeRanges.push({
       id: uuidv4(),
       weekday: 1,
-      start_time: '',
-      end_time: '',
+      start_time: "",
+      end_time: "",
     });
     setAvailableTimeRanges(newTimeRanges);
   }
@@ -318,6 +344,7 @@ function ProfileDashboardTab() {
                           <Input
                             as={InputMask}
                             mask="**:**"
+                            onKeyPress={onTimeRangeKeyPress}
                             onChange={(e) =>
                               onTimeChange(e, timeRange.id, "start")
                             }
