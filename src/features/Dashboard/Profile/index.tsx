@@ -41,9 +41,23 @@ interface CommonQuestion {
 }
 
 interface AvailabilityTimeRange {
+  id: any;
   weekday: number;
   start_time: string;
   end_time: string;
+}
+
+function fillZeros(value: string) {
+  value = value.replaceAll(":", "");
+  value = value + "0".repeat(4 - value.length);
+
+  // add a : every 2 characters
+  value = value.replace(/(.{2})/g, "$1:");
+
+  // remove the last :
+  value = value.substring(0, value.length - 1);
+
+  return value;
 }
 
 function ProfileDashboardTab() {
@@ -62,6 +76,7 @@ function ProfileDashboardTab() {
       ? user.coach.available_time_ranges
       : [
           {
+            id: uuidv4(),
             weekday: 1,
             start_time: time,
             end_time: time,
@@ -84,6 +99,7 @@ function ProfileDashboardTab() {
         ]
   );
 
+  console.log("availableTimeRanges", availableTimeRanges);
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -94,6 +110,20 @@ function ProfileDashboardTab() {
 
   function handleSubmit(values: FormValues) {
     console.log("values", values);
+    let formattedTimeRanges = availableTimeRanges.map((timeRange) => {
+      let formattedTimeRange = { ...timeRange };
+      if (formattedTimeRange.end_time.length <= 5) {
+        formattedTimeRange.end_time += ":00";
+      }
+      if (formattedTimeRange.start_time.length <= 5) {
+        formattedTimeRange.start_time += ":00";
+      }
+      return formattedTimeRange;
+    });
+    let timeRangeDate = {
+      availability_ranges: formattedTimeRanges,
+    };
+    availabilityMutation.mutate(timeRangeDate);
   }
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>, id?: string) {
@@ -127,6 +157,64 @@ function ProfileDashboardTab() {
 
   function handleDayChange(event: React.ChangeEvent<HTMLSelectElement>) {
     setSelectedDay(parseInt(event.target.value));
+  }
+
+  function onTimeChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+    range: string
+  ) {
+    // getting readonly errors so I have to reassign properties often
+    let newAvailabilityTimeRanges = [...availableTimeRanges];
+    const foundTimeRangeIndex = newAvailabilityTimeRanges.findIndex(
+      (timeRange) => timeRange.id == id
+    );
+    if (foundTimeRangeIndex != -1) {
+      let item = { ...newAvailabilityTimeRanges[foundTimeRangeIndex] };
+      let value = fillZeros(e.currentTarget.value);
+      if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
+        // check this for better UX
+        // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
+        e.preventDefault();
+        return false;
+      }
+      if (range == "start") {
+        item.start_time = value;
+      } else {
+        item.end_time = value;
+      }
+      newAvailabilityTimeRanges[foundTimeRangeIndex] = item;
+    }
+    setAvailableTimeRanges(newAvailabilityTimeRanges);
+  }
+
+  function onTimeRangeKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    let value = fillZeros(e.currentTarget.value);
+    if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
+      // check this for better UX
+      // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
+      e.preventDefault();
+    }
+  }
+
+  function onTimeRangeRemove(id: string) {
+    let index = availableTimeRanges.findIndex(
+      (timeRange) => timeRange.id == id
+    );
+    let newTimeRanges = [...availableTimeRanges];
+    newTimeRanges.splice(index, 1);
+    setAvailableTimeRanges(newTimeRanges);
+  }
+
+  function onNewTimeRangeClick() {
+    let newTimeRanges = [...availableTimeRanges];
+    newTimeRanges.push({
+      id: uuidv4(),
+      weekday: 1,
+      start_time: "",
+      end_time: "",
+    });
+    setAvailableTimeRanges(newTimeRanges);
   }
 
   return (
@@ -251,40 +339,59 @@ function ProfileDashboardTab() {
                   )
                   .map((timeRange: AvailabilityTimeRange, i: number) => {
                     return (
-                      <HStack>
-                        <InputGroup key={i} alignItems="center">
+                      <HStack key={i}>
+                        <InputGroup alignItems="center">
                           <Input
+                            as={InputMask}
+                            mask="**:**"
+                            onKeyPress={onTimeRangeKeyPress}
+                            onChange={(e) =>
+                              onTimeChange(e, timeRange.id, "start")
+                            }
                             size="lg"
-                            id="commonQuestion"
+                            id="timeRangeStart"
                             placeholder="John Doe"
                             variant="filled"
                             isRequired
                             value={timeRange.start_time}
-                            // onChange={(e) => onTextChange(e, question.id)}
+                            // @ts-ignore:next-line
+                            maskChar=""
                           />
                         </InputGroup>
                         <Text>to</Text>
-                        <InputGroup key={i} alignItems="center">
+                        <InputGroup alignItems="center">
                           <Input
+                            as={InputMask}
+                            mask="**:**"
+                            onChange={(e) =>
+                              onTimeChange(e, timeRange.id, "end")
+                            }
                             size="lg"
-                            id="commonQuestion"
+                            id="timeRangeEnd"
                             placeholder="John Doe"
                             variant="filled"
                             isRequired
                             value={timeRange.end_time}
-                            // onChange={(e) => onTextChange(e, question.id)}
+                            // @ts-ignore:next-line
+                            maskChar=""
                           />
                           <InputRightElement top="inherit">
                             <CloseButton
-                            // onClick={() =>
-                            //   handleRemoveCommonQuestion(question.id)
-                            // }
+                              onClick={() => onTimeRangeRemove(timeRange.id)}
                             />
                           </InputRightElement>
                         </InputGroup>
                       </HStack>
                     );
                   })}
+                <Flex
+                  w="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                  mt={6}
+                >
+                  <AddButton onClick={onNewTimeRangeClick} />
+                </Flex>
               </VStack>
               <PrimaryButton mt={10} type="submit">
                 Save

@@ -4,7 +4,7 @@ import axios from "axios";
 function useChangeAvailabilityTimeRanges() {
   const mutation = useMutation((data: any) => {
     return axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/change_availability_time_ranges/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/change_availability_time_ranges/`,
       data
     );
   });
