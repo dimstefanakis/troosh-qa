@@ -23,7 +23,10 @@ import {
 } from "formik";
 import InputMask from "react-input-mask";
 import { v4 as uuidv4 } from "uuid";
+import useChangeSubscriberProfile from "./hooks/useChangeSubscriberProfile";
+import useChangeMentorProfile from "./hooks/useChangeMentorProfile";
 import useChangeAvailabilityTimeRanges from "./hooks/useChangeAvailabilityTimeRanges";
+import useChangeCommonQuestions from "./hooks/useChangeCommonQuestions";
 import { RootState } from "../../../store";
 import AddButton from "../../../flat/AddButton";
 import PrimaryButton from "../../../flat/PrimaryButton";
@@ -66,7 +69,10 @@ function ProfileDashboardTab() {
     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
   const { user } = useSelector((state: RootState) => state.authentication);
+  const subscriberMutation = useChangeSubscriberProfile();
+  const mentorMutation = useChangeMentorProfile(user.coach?.surrogate);
   const availabilityMutation = useChangeAvailabilityTimeRanges();
+  const commonQuestionsMutation = useChangeCommonQuestions();
   console.log("user", user);
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [availableTimeRanges, setAvailableTimeRanges] = useState<
@@ -102,28 +108,47 @@ function ProfileDashboardTab() {
   console.log("availableTimeRanges", availableTimeRanges);
   useEffect(() => {
     if (user) {
-      setName(user.name);
-      setBio(user.bio);
+      setName(user.subscriber.name);
+      setBio(user.coach.bio);
       setAvailableTimeRanges(user.coach.available_time_ranges);
     }
   }, [user]);
 
   function handleSubmit(values: FormValues) {
     console.log("values", values);
-    let formattedTimeRanges = availableTimeRanges.map((timeRange) => {
-      let formattedTimeRange = { ...timeRange };
-      if (formattedTimeRange.end_time.length <= 5) {
-        formattedTimeRange.end_time += ":00";
-      }
-      if (formattedTimeRange.start_time.length <= 5) {
-        formattedTimeRange.start_time += ":00";
-      }
-      return formattedTimeRange;
-    });
+    let formattedTimeRanges = availableTimeRanges
+      .filter((timeRange) => {
+        return timeRange.end_time && timeRange.start_time;
+      })
+      .map((timeRange) => {
+        let formattedTimeRange = { ...timeRange };
+        if (formattedTimeRange.end_time.length <= 5) {
+          formattedTimeRange.end_time += ":00";
+        }
+        if (formattedTimeRange.start_time.length <= 5) {
+          formattedTimeRange.start_time += ":00";
+        }
+        return formattedTimeRange;
+      });
     let timeRangeDate = {
       availability_ranges: formattedTimeRanges,
     };
     availabilityMutation.mutate(timeRangeDate);
+
+    let formattedCommonQuestion = commonQuestions.map(
+      (commonQuestion) => commonQuestion.body
+    );
+    commonQuestionsMutation.mutate(formattedCommonQuestion);
+
+    let subscriberFormData = new FormData();
+    subscriberFormData.append("name", values.name);
+    subscriberMutation.mutate(subscriberFormData);
+
+    if (user.coach) {
+      let mentorFormData = new FormData();
+      mentorFormData.append("bio", values.bio);
+      mentorMutation.mutate(mentorFormData);
+    }
   }
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>, id?: string) {
@@ -164,6 +189,7 @@ function ProfileDashboardTab() {
     id: string,
     range: string
   ) {
+    console.log(e.currentTarget.value);
     // getting readonly errors so I have to reassign properties often
     let newAvailabilityTimeRanges = [...availableTimeRanges];
     const foundTimeRangeIndex = newAvailabilityTimeRanges.findIndex(
@@ -171,30 +197,21 @@ function ProfileDashboardTab() {
     );
     if (foundTimeRangeIndex != -1) {
       let item = { ...newAvailabilityTimeRanges[foundTimeRangeIndex] };
-      let value = fillZeros(e.currentTarget.value);
-      if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
-        // check this for better UX
-        // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
-        e.preventDefault();
-        return false;
-      }
+      // let value = fillZeros(e.currentTarget.value);
+      // if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
+      //   // check this for better UX
+      //   // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
+      //   e.preventDefault();
+      //   return false;
+      // }
       if (range == "start") {
-        item.start_time = value;
+        item.start_time = e.currentTarget.value;
       } else {
-        item.end_time = value;
+        item.end_time = e.currentTarget.value;
       }
       newAvailabilityTimeRanges[foundTimeRangeIndex] = item;
     }
     setAvailableTimeRanges(newAvailabilityTimeRanges);
-  }
-
-  function onTimeRangeKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
-    let value = fillZeros(e.currentTarget.value);
-    if (parseInt(value.slice(0, 2)) > 24 || parseInt(value.slice(3)) > 59) {
-      // check this for better UX
-      // https://stackoverflow.com/questions/52846347/reactjs-cannot-restrict-user-input-to-letters-only/52846409
-      e.preventDefault();
-    }
   }
 
   function onTimeRangeRemove(id: string) {
@@ -210,7 +227,7 @@ function ProfileDashboardTab() {
     let newTimeRanges = [...availableTimeRanges];
     newTimeRanges.push({
       id: uuidv4(),
-      weekday: 1,
+      weekday: selectedDay,
       start_time: "",
       end_time: "",
     });
@@ -339,18 +356,15 @@ function ProfileDashboardTab() {
                   )
                   .map((timeRange: AvailabilityTimeRange, i: number) => {
                     return (
-                      <HStack key={i}>
+                      <HStack key={i} w="100%">
                         <InputGroup alignItems="center">
                           <Input
-                            as={InputMask}
-                            mask="**:**"
-                            onKeyPress={onTimeRangeKeyPress}
+                            type="time"
                             onChange={(e) =>
                               onTimeChange(e, timeRange.id, "start")
                             }
                             size="lg"
                             id="timeRangeStart"
-                            placeholder="John Doe"
                             variant="filled"
                             isRequired
                             value={timeRange.start_time}
@@ -361,14 +375,12 @@ function ProfileDashboardTab() {
                         <Text>to</Text>
                         <InputGroup alignItems="center">
                           <Input
-                            as={InputMask}
-                            mask="**:**"
+                            type="time"
                             onChange={(e) =>
                               onTimeChange(e, timeRange.id, "end")
                             }
                             size="lg"
                             id="timeRangeEnd"
-                            placeholder="John Doe"
                             variant="filled"
                             isRequired
                             value={timeRange.end_time}
