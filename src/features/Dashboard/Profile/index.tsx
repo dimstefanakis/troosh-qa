@@ -115,7 +115,6 @@ function ProfileDashboardTab() {
   }, [user]);
 
   function handleSubmit(values: FormValues) {
-    console.log("values", values);
     let formattedTimeRanges = availableTimeRanges
       .filter((timeRange) => {
         return timeRange.end_time && timeRange.start_time;
