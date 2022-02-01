@@ -9,6 +9,7 @@ import { setStep } from "../src/features/Progress/progressSlice";
 import useGetQuestionAvailableMentors from "../src/features/Question/hooks/useGetQuestionAvailableMentors";
 import { RootState } from "../src/store";
 import axios from "axios";
+import { useMediaQuery } from "@chakra-ui/react";
 
 interface PersonProps {
   icon: string;
@@ -25,8 +26,10 @@ const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
 function Match() {
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+
   const dispatch = useDispatch();
-  const {question} = useSelector((state:RootState)=>state.question);
+  const { question } = useSelector((state: RootState) => state.question);
   const query = useQuery(
     ["getQuestionAvailableMentors", question.id],
     async () => {
@@ -49,7 +52,7 @@ function Match() {
 
   return (
     <Box w="100%">
-      <ProgressBar />
+      {isSmallerThan767 ? "" : <ProgressBar />}
       <QuestionChoice />
       {query.isLoading || !query.data ? (
         <ResultsSkeleton />
@@ -116,13 +119,17 @@ function Person({ icon, name, expertise, description, id }: PersonProps) {
 }
 
 function QuestionChoice() {
-  const {question} = useSelector((state: RootState)=>state.question);
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+
+  const { question } = useSelector((state: RootState) => state.question);
 
   return (
     <Flex>
       <Text
         marginBottom="90px"
         fontWeight="800"
+        marginLeft={isSmallerThan767 ? "20px" : "0px"}
+        paddingRight={isSmallerThan767 ? "20px" : "0px"}
         width="100%"
         fontSize="4xl"
         justifyContent="center"

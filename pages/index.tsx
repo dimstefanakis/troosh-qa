@@ -10,8 +10,12 @@ import ProgressBar from "../src/features/ProgressBar";
 import { RootState } from "../src/store";
 import { setStep } from "../src/features/Progress/progressSlice";
 import styles from "../styles/Home.module.css";
+import { useMediaQuery } from "@chakra-ui/react";
+
 
 const Home: NextPage = () => {
+    const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+
   const dispatch = useDispatch();
   const { question } = useSelector((state: RootState) => state.question);
 
@@ -21,7 +25,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <ProgressBar />
+      {isSmallerThan767 ? "" : <ProgressBar />}
       <Flex justifyContent="center">
         <Flex
           flexDirection="column"

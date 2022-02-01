@@ -6,8 +6,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setQuestion } from "../Question/questionSlice";
 import { RootState } from "../../store";
 import styles from "./QuestionInput.module.css";
+import { useMediaQuery } from "@chakra-ui/react";
+
 
 function QuestionInput() {
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const dispatch = useDispatch();
 
   // ACCESS TO QUESTION HERE
@@ -20,6 +23,7 @@ function QuestionInput() {
   return (
     <Flex
       marginTop="90px"
+      marginLeft={isSmallerThan767 ? "50px" : "0px"}
       width="100%"
       maxW="400px"
       fontSize="xl"

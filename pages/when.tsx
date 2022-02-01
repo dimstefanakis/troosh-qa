@@ -18,6 +18,7 @@ import useCreateQuestion from "../src/features/Question/hooks/useCreateQuestion"
 import { useRouter } from "next/router";
 import axios from "axios";
 import { setQuestion } from "../src/features/Question/questionSlice";
+import { useMediaQuery } from "@chakra-ui/react";
 
 interface NowAnswerInterface {
   createQuestion: UseMutationResult;
@@ -29,6 +30,7 @@ function WhenPage() {
   const createQuestion = useCreateQuestion();
   const { question } = useSelector((state: RootState) => state.question);
   const [loading, setLoading] = useState(false);
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
 
   useEffect(() => {
     dispatch(setStep(1));
@@ -38,28 +40,28 @@ function WhenPage() {
     createQuestion.mutate({ body: question.body, when: when });
   }
 
-  useEffect(()=>{
-    if(createQuestion.isSuccess){
+  useEffect(() => {
+    if (createQuestion.isSuccess) {
       let createdQuestion = createQuestion.data.question;
       // id is actually named surrogate in the response but we want to keep the id name
-      createdQuestion = {...createdQuestion, id: createdQuestion.surrogate}
+      createdQuestion = { ...createdQuestion, id: createdQuestion.surrogate };
       dispatch(setQuestion(createdQuestion));
-      router.push('/results')
+      router.push("/results");
     }
-  },[createQuestion.data])
+  }, [createQuestion.data]);
 
-  useEffect(()=>{
-    if(question.id){
-      
+  useEffect(() => {
+    if (question.id) {
     }
-  }, [question.id])
+  }, [question.id]);
 
   return (
     <>
-      <ProgressBar />
+      {isSmallerThan767 ? "" : <ProgressBar />}
       <WhenHeader />
       <Flex mt={5}>
         <TimeButton
+          width="200px"
           onClick={() => handleWhenClick("now")}
           backgroundColor="#FFD29B"
           _hover={{ bg: "#f5c68c" }}
@@ -73,21 +75,23 @@ function WhenPage() {
         </TimeButton>
       </Flex>
       {createQuestion.isLoading == false ? (
-        <Flex mt={5}>
-          <Flex width="100%">
-            <TimeButton onClick={() => handleWhenClick("6")}>
-              6 hours from now
-            </TimeButton>
-          </Flex>
-          <Flex width="100%">
-            <TimeButton onClick={() => handleWhenClick("12")}>
-              12 hours from now
-            </TimeButton>
-          </Flex>
-          <Flex width="100%">
-            <TimeButton onClick={() => handleWhenClick("24")}>
-              24 hours from now
-            </TimeButton>
+        <Flex>
+          <Flex mt={5} justifyContent="center" alignItems="center">
+            <Flex>
+              <TimeButton onClick={() => handleWhenClick("6")}>
+                6 hours from now
+              </TimeButton>
+            </Flex>
+            <Flex>
+              <TimeButton onClick={() => handleWhenClick("12")}>
+                12 hours from now
+              </TimeButton>
+            </Flex>
+            <Flex>
+              <TimeButton onClick={() => handleWhenClick("24")}>
+                24 hours from now
+              </TimeButton>
+            </Flex>
           </Flex>
         </Flex>
       ) : (
@@ -98,6 +102,8 @@ function WhenPage() {
 }
 
 function TimeButton(props: ButtonProps) {
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+
   return (
     <Button
       onClick={props.onClick}
@@ -107,7 +113,7 @@ function TimeButton(props: ButtonProps) {
       borderRadius="50px"
       fontSize="l"
       height="50px"
-      width="200px"
+      width={isSmallerThan767 ? "150px" : "200px"}
       whiteSpace="normal"
       m={2}
       _active={{

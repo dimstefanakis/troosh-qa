@@ -8,6 +8,7 @@ import axios from "axios";
 import { setStep } from "../../src/features/Progress/progressSlice";
 import CheckoutButton from "../../src/features/CheckoutButton";
 import MentorProfileSkeleton from "../../src/flat/MentorProfileSkeleton";
+import { useMediaQuery } from "@chakra-ui/react";
 
 interface PersonProps {
   icon: string;
@@ -35,6 +36,10 @@ const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
 function Profile() {
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+  const [isSmallerThan700] = useMediaQuery("(max-width:700px)");
+
+
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
@@ -61,7 +66,7 @@ function Profile() {
 
   return data ? (
     <>
-      <ProgressBar />
+      {isSmallerThan767 ? "" : <ProgressBar />}
       <Person
         id={data.surrogate}
         name={data.name}
@@ -85,6 +90,8 @@ function Profile() {
 }
 
 function Person({ icon, name, description, id }: PersonProps) {
+      const [isSmallerThan700] = useMediaQuery("(max-width:767px)");
+
   return (
     <Box
       marginBottom="40px"
@@ -92,7 +99,7 @@ function Person({ icon, name, description, id }: PersonProps) {
       justifyContent="center"
       alignItems="center"
     >
-      <Flex>
+      <Flex marginLeft={isSmallerThan700 ? "15px" : "0px"}>
         <Image
           src={icon}
           maxW="100px"
@@ -116,15 +123,17 @@ function Person({ icon, name, description, id }: PersonProps) {
 }
 
 function Expertise({ expertise }: ExpertiseProps) {
+      const [isSmallerThan700] = useMediaQuery("(max-width:767px)");
+
   return (
     <>
-      <Flex width="100%">
+      <Flex width="100%" marginLeft={isSmallerThan700 ? "15px" : "0px"}>
         <Flex fontSize="xl" color="#565656" fontWeight="700">
           Expertise
         </Flex>
       </Flex>
 
-      <Flex width="100%">
+      <Flex width="100%" marginLeft={isSmallerThan700 ? "15px" : "0px"}>
         <Box
           backgroundColor="#FFD29B"
           borderRadius="100px"
@@ -147,14 +156,25 @@ function Expertise({ expertise }: ExpertiseProps) {
 }
 
 function CommonQuestions() {
+      const [isSmallerThan700] = useMediaQuery("(max-width:767px)");
+
+  
   return (
     <>
-      <Flex width="100%" marginTop="20px">
+      <Flex
+        width="100%"
+        marginTop="20px"
+        marginLeft={isSmallerThan700 ? "15px" : "0px"}
+      >
         <Flex fontSize="xl" color="#565656" fontWeight="700">
           Common Questions
         </Flex>
       </Flex>
-      <Flex flexFlow="row wrap" justifyContent="space-between">
+      <Flex
+        flexFlow="row wrap"
+        justifyContent="space-between"
+        marginLeft={isSmallerThan700 ? "15px" : "0px"}
+      >
         {askedQuestions.map((item, index) => {
           return (
             <Flex key={index}>
