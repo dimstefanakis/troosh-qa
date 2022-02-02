@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Textarea } from "@chakra-ui/react";
+import { Textarea, Text } from "@chakra-ui/react";
 import ResizeTextarea from "react-textarea-autosize";
 import { Flex } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,7 +13,6 @@ function QuestionInput() {
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const dispatch = useDispatch();
 
-  // ACCESS TO QUESTION HERE
   const { question } = useSelector((state: RootState) => state.question);
 
   let questionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -22,6 +21,7 @@ function QuestionInput() {
 
   return (
     <Flex
+      flexFlow="column"
       marginTop="90px"
       marginLeft={isSmallerThan767 ? "50px" : "0px"}
       width="100%"
@@ -30,6 +30,7 @@ function QuestionInput() {
       className={question.body.length > 0 ? "" : styles.textareaContainer}
     >
       <Textarea
+        minLength={30}
         variant="unstyled"
         minH="unset"
         overflow="hidden"
@@ -42,8 +43,30 @@ function QuestionInput() {
         // textAlign="center"
         size=""
       />
+      <CharactersLeft />
     </Flex>
   );
+}
+
+function CharactersLeft(){
+  const { question } = useSelector((state: RootState) => state.question);
+  let feedbackText = ''
+
+  if (question.body.length == 0) {
+    feedbackText = "";
+  } else if (question.body.length < 15) {
+    feedbackText = "Your question is too broad";
+  } else if (question.body.length < 30) {
+    feedbackText = "Try to be a bit more specific, almost there!";
+  } else {
+    feedbackText = "Ready to go!";
+  }
+
+  return(
+    <Flex>
+      <Text color="gray.600" fontSize="xs">{feedbackText}</Text>
+    </Flex>
+  )
 }
 
 export default QuestionInput;

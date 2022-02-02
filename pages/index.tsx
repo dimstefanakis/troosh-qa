@@ -121,7 +121,7 @@ function SearchButtons() {
   const [buttonsVisible, setButtonsVisible] = useState(false);
 
   useEffect(() => {
-    setButtonsVisible(question.body.length > 0);
+    setButtonsVisible(question.body.length >= 30);
   }, [question]);
 
   return (
