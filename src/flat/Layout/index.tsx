@@ -15,6 +15,7 @@ function Layout({ children }: LayoutProps) {
         flexFlow="column"
         paddingTop="120px"
         paddingBottom="60px"
+        px={3}
       >
         <Flex
           w="100%"

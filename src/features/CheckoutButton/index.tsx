@@ -26,24 +26,27 @@ function CheckoutButton({ rate, mentor }: CheckoutButtonProps) {
   const { question } = useSelector((state: RootState) => state.question);
 
   async function onCheckoutClick() {
-    try {
-      let formData = new FormData();
-      formData.append(
-        "qa_session_id",
-        mentor.qa_sessions.find(
-          (session: any) => session.minutes == parseInt(timeNeeded)
-        ).surrogate
-      );
-      setLoading(true);
-      let response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/create_qa_checkout_session/`,
-        formData
-      );
-      setLoading(false);
-      router.push(response.data.checkout_url);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
+    if (question.id) {
+      try {
+        let formData = new FormData();
+        formData.append(
+          "qa_session_id",
+          mentor.qa_sessions.find(
+            (session: any) => session.minutes == parseInt(timeNeeded)
+          ).surrogate
+        );
+        formData.append("question_id", question.id);
+        setLoading(true);
+        let response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/create_qa_checkout_session/`,
+          formData
+        );
+        setLoading(false);
+        router.push(response.data.checkout_url);
+      } catch (e) {
+        console.error(e);
+        setLoading(false);
+      }
     }
   }
 
@@ -63,7 +66,7 @@ function CheckoutButton({ rate, mentor }: CheckoutButtonProps) {
       <Flex justifyContent="center" alignItems="center" mt={10}>
         <TimeSelect timeNeeded={timeNeeded} setTimeNeeded={setTimeNeeded} />
         <PrimaryButton w="45%" isLoading={loading} onClick={onCheckoutClick}>
-          Book for {" "}
+          Book for{" "}
           {
             mentor.qa_sessions.find(
               (session: any) => session.minutes == parseInt(timeNeeded)

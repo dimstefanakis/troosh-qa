@@ -9,6 +9,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { ButtonProps } from "@chakra-ui/button";
+import { Spinner } from "@chakra-ui/spinner";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { UseMutationResult } from "react-query";
 import { setStep } from "../src/features/Progress/progressSlice";
@@ -24,19 +26,35 @@ interface NowAnswerInterface {
   createQuestion: UseMutationResult;
 }
 
+interface AnimateWhenButtonWrapperProps {
+  when: string;
+  selectedTime: string;
+  children: JSX.Element;
+}
+
+interface AnimateStateSwitchProps {
+  isVisible: boolean;
+  children: JSX.Element;
+}
+
 function WhenPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const createQuestion = useCreateQuestion();
   const { question } = useSelector((state: RootState) => state.question);
-  const [loading, setLoading] = useState(false);
+  const [selectedTime, setSelectedTime] = useState<string>("");
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+
+  if (!question.body) {
+    router.push("/");
+  }
 
   useEffect(() => {
     dispatch(setStep(1));
   }, []);
 
   function handleWhenClick(when: string) {
+    setSelectedTime(when);
     createQuestion.mutate({ body: question.body, when: when });
   }
 
@@ -46,58 +64,85 @@ function WhenPage() {
       // id is actually named surrogate in the response but we want to keep the id name
       createdQuestion = { ...createdQuestion, id: createdQuestion.surrogate };
       dispatch(setQuestion(createdQuestion));
-      router.push("/results");
     }
   }, [createQuestion.data]);
 
+  // redirect only after redux store is populated with the question
   useEffect(() => {
-    if (question.id) {
+    if (question.id && createQuestion.isSuccess && createQuestion.data) {
+      router.push("/results");
     }
-  }, [question.id]);
+  }, [question.id, createQuestion]);
 
   return (
     <>
       {isSmallerThan767 ? "" : <ProgressBar />}
-      <WhenHeader />
-      <Flex mt={5}>
-        <TimeButton
-          width="200px"
-          onClick={() => handleWhenClick("now")}
-          backgroundColor="#FFD29B"
-          _hover={{ bg: "#f5c68c" }}
-          _active={{
-            bg: "#f7c17e",
-            // transform: "scale(0.98)",
-            // borderColor: "#bec3c9",
-          }}
-        >
-          <Flex>Now</Flex>
-        </TimeButton>
-      </Flex>
-      {createQuestion.isLoading == false ? (
-        <Flex>
-          <Flex mt={5} justifyContent="center" alignItems="center">
-            <Flex>
-              <TimeButton onClick={() => handleWhenClick("6")}>
-                6 hours from now
+      <Flex position="relative" justifyContent="center" alignItems="center" width="100%">
+        <AnimateStateSwitch isVisible={selectedTime == ""}>
+          <Flex flexFlow="column" alignItems="center" width="100%">
+            <WhenHeader />
+            <Flex mt={5}>
+              <TimeButton
+                width="200px"
+                onClick={() => handleWhenClick("now")}
+                backgroundColor="#FFD29B"
+                _hover={{ bg: "#f5c68c" }}
+                _active={{
+                  bg: "#f7c17e",
+                  // transform: "scale(0.98)",
+                  // borderColor: "#bec3c9",
+                }}
+              >
+                <Flex>Now</Flex>
               </TimeButton>
             </Flex>
             <Flex>
-              <TimeButton onClick={() => handleWhenClick("12")}>
-                12 hours from now
-              </TimeButton>
-            </Flex>
-            <Flex>
-              <TimeButton onClick={() => handleWhenClick("24")}>
-                24 hours from now
-              </TimeButton>
+              <Flex mt={5} justifyContent="center" alignItems="center">
+                <Flex>
+                  <TimeButton onClick={() => handleWhenClick("6")}>
+                    6 hours from now
+                  </TimeButton>
+                </Flex>
+                <Flex>
+                  <TimeButton onClick={() => handleWhenClick("12")}>
+                    12 hours from now
+                  </TimeButton>
+                </Flex>
+                <Flex>
+                  <TimeButton onClick={() => handleWhenClick("24")}>
+                    24 hours from now
+                  </TimeButton>
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-      ) : (
-        <NowSearch />
-      )}
+        </AnimateStateSwitch>
+        <AnimateStateSwitch isVisible={selectedTime != ""}>
+          <NowSearch />
+        </AnimateStateSwitch>
+      </Flex>
     </>
+  );
+}
+
+function AnimateStateSwitch({ children, isVisible }: AnimateStateSwitchProps) {
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          style={{ height: "100%", width: '100%' }}
+          initial={{
+            opacity: 0,
+            transform: "scale(0.9)",
+            position: "absolute",
+          }}
+          animate={{ opacity: 1, transform: "scale(1)" }}
+          exit={{ opacity: 0, transform: "scale(0.9)" }}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -132,7 +177,6 @@ function WhenHeader() {
   return (
     <Flex
       width="100%"
-      height="25%"
       justifyContent="center"
       alignItems="center"
       textAlign="center"
@@ -141,7 +185,7 @@ function WhenHeader() {
       <Text fontWeight="700" fontSize="3xl" width="100%">
         {question.body}
       </Text>
-      <Text mt={20} color="gray">
+      <Text color="gray" mt={20}>
         I need an answer
       </Text>
     </Flex>
@@ -150,18 +194,20 @@ function WhenHeader() {
 
 function NowSearch() {
   const router = useRouter();
-  setTimeout(function () {
-    router.push("/results");
-  }, 5000);
+
   return (
     <Flex
       fontSize="2xl"
       color="#555555;"
       marginTop="50px"
-      maxW="400px"
       textAlign="center"
+      flexFlow="column"
+      justifyContent="center"
+      alignItems="center"
+      mt={20}
     >
-      Looking for currently available mentors...
+      <Text maxW="80%">Looking for currently available mentors...</Text>
+      <Spinner mt={10} size="xl"/>
     </Flex>
   );
 }

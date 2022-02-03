@@ -37,6 +37,7 @@ function QuestionInput() {
         w="100%"
         resize="none"
         minRows={1}
+        value={question.body}
         onChange={questionChange}
         as={ResizeTextarea}
         placeholder={`If I want to maximize tricep development and want to do it with 2 movements in addition to bench and OHP, are dips and overhead cable tricep extension good choices?\n\nWhich global state management can I use with React Query?`}

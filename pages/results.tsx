@@ -25,11 +25,16 @@ const mockDescription = `Lorem ipsum dolor sit amet, consectetur adipiscing elit
 const mockImage =
   "https://i1.sndcdn.com/avatars-jj6SNokXHSlLGjyD-TyGfCg-t500x500.jpg";
 
-function Match() {
+function Results() {
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
-
+  const router = useRouter();
   const dispatch = useDispatch();
   const { question } = useSelector((state: RootState) => state.question);
+
+  if(!question.body){
+    router.push('/');
+  }
+  
   const query = useQuery(
     ["getQuestionAvailableMentors", question.id],
     async () => {
@@ -128,10 +133,9 @@ function QuestionChoice() {
       <Text
         marginBottom="90px"
         fontWeight="800"
-        marginLeft={isSmallerThan767 ? "20px" : "0px"}
-        paddingRight={isSmallerThan767 ? "20px" : "0px"}
+        paddingX={isSmallerThan767 ? "20px" : "0px"}
         width="100%"
-        fontSize="4xl"
+        fontSize="2xl"
         justifyContent="center"
         alignItems="center"
         textAlign="center"
@@ -142,4 +146,4 @@ function QuestionChoice() {
   );
 }
 
-export default Match;
+export default Results;
