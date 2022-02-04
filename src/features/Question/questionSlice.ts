@@ -6,6 +6,7 @@ interface QuestionStateInterface {
 
 interface QuestionInterface {
   body: string;
+  initial_delivery_time: string;
   id?: string;
 }
 
@@ -14,12 +15,13 @@ export const questionSlice = createSlice({
   initialState: <QuestionStateInterface>{
     question: {
       body: "",
+      initial_delivery_time: "",
       id: "",
     },
   },
   reducers: {
     setQuestion: (state, action) => {
-      state.question = {...state.question, ...action.payload}
+      state.question = { ...state.question, ...action.payload };
     },
   },
 });

@@ -67,6 +67,7 @@ function WhenPage() {
     }
   }, [createQuestion.data]);
 
+  console.log(question);
   // redirect only after redux store is populated with the question
   useEffect(() => {
     if (question.id && createQuestion.isSuccess && createQuestion.data) {
