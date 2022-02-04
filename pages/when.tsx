@@ -86,15 +86,14 @@ function WhenPage() {
               <TimeButton
                 width="200px"
                 onClick={() => handleWhenClick("now")}
-                backgroundColor="#FFD29B"
-                _hover={{ bg: "#f5c68c" }}
                 _active={{
                   bg: "#f7c17e",
                   // transform: "scale(0.98)",
                   // borderColor: "#bec3c9",
                 }}
+                borderColor="black"
               >
-                <Flex>Now</Flex>
+                <Flex>ASAP</Flex>
               </TimeButton>
             </Flex>
             <Flex>
@@ -155,6 +154,7 @@ function TimeButton(props: ButtonProps) {
       onClick={props.onClick}
       backgroundColor="#AAF0D1"
       _hover={{ bg: "#91e9c2" }}
+      border="2px solid #AAF0D1"
       variant="solid"
       borderRadius="50px"
       fontSize="l"
@@ -187,7 +187,7 @@ function WhenHeader() {
         {question.body}
       </Text>
       <Text color="gray" mt={20}>
-        I need an answer
+        Get an answer
       </Text>
     </Flex>
   );

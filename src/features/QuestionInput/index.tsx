@@ -8,8 +8,11 @@ import { RootState } from "../../store";
 import styles from "./QuestionInput.module.css";
 import { useMediaQuery } from "@chakra-ui/react";
 
+interface QuestionInputProps{
+  questionInputRef: React.RefObject<HTMLTextAreaElement>
+}
 
-function QuestionInput() {
+function QuestionInput({questionInputRef}: QuestionInputProps) {
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const dispatch = useDispatch();
 
@@ -30,8 +33,12 @@ function QuestionInput() {
       className={question.body.length > 0 ? "" : styles.textareaContainer}
     >
       <Textarea
+      layerStyle="selected"
+        ref={questionInputRef}
+        borderColor="transparent"
         minLength={30}
-        variant="unstyled"
+        padding={4}
+        borderRadius="10px"
         minH="unset"
         overflow="hidden"
         w="100%"

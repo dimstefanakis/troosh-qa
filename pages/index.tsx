@@ -1,23 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionInput from "../src/features/QuestionInput";
 import ProgressBar from "../src/features/ProgressBar";
 import { RootState } from "../src/store";
 import { setStep } from "../src/features/Progress/progressSlice";
+import getCharactersLeft from "../src/utils/getCharactersLeft";
 import styles from "../styles/Home.module.css";
 import { useMediaQuery } from "@chakra-ui/react";
 
+interface SearchButtonsProps {
+  questionInputRef: React.RefObject<HTMLTextAreaElement>;
+}
+
+interface ExploreButtonProps {
+  questionInputRef: React.RefObject<HTMLTextAreaElement>;
+}
 
 const Home: NextPage = () => {
-    const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
-
   const dispatch = useDispatch();
+  const questionInputRef = useRef<HTMLTextAreaElement>(null);
   const { question } = useSelector((state: RootState) => state.question);
+
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
 
   useEffect(() => {
     dispatch(setStep(0));
@@ -34,8 +44,8 @@ const Home: NextPage = () => {
           width="100%"
         >
           <QuestionHeader />
-          <QuestionInput />
-          <SearchButtons />
+          <QuestionInput questionInputRef={questionInputRef} />
+          <SearchButtons questionInputRef={questionInputRef} />
         </Flex>
       </Flex>
     </>
@@ -57,41 +67,21 @@ function QuestionHeader() {
   );
 }
 
-function ButtonMatch() {
+function ExploreButton({ questionInputRef }: ExploreButtonProps) {
   const router = useRouter();
+  const toast = useToast();
+  const { question } = useSelector((state: RootState) => state.question);
 
   const handleClick = () => {
-    router.push("/when?match");
-  };
-
-  return (
-    <Button
-      onClick={handleClick}
-      backgroundColor="#FFD29B"
-      _hover={{ bg: "#f5c68c" }}
-      variant="solid"
-      borderRadius="50px"
-      fontSize="xl"
-      height="70px"
-      width="200px"
-      whiteSpace="normal"
-      m={2}
-      _active={{
-        bg: "#f7c17e",
-        // transform: "scale(0.98)",
-        // borderColor: "#bec3c9",
-      }}
-    >
-      I'm feeling lucky
-    </Button>
-  );
-}
-
-function ButtonViewPeople() {
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push("/when?view");
+    if (question.body.length >= 30) {
+      router.push("/when?view");
+    } else {
+      toast({
+        description: getCharactersLeft(question),
+      });
+      console.log(questionInputRef.current);
+      questionInputRef.current?.focus();
+    }
   };
   return (
     <Button
@@ -116,31 +106,18 @@ function ButtonViewPeople() {
   );
 }
 
-function SearchButtons() {
+function SearchButtons({ questionInputRef }: SearchButtonsProps) {
   const { question } = useSelector((state: RootState) => state.question);
-  const [buttonsVisible, setButtonsVisible] = useState(false);
+  const [directToError, setDirectToError] = useState(false);
 
   useEffect(() => {
-    setButtonsVisible(question.body.length >= 30);
+    setDirectToError(question.body.length >= 30);
   }, [question]);
 
   return (
-    <AnimatePresence>
-      {buttonsVisible && (
-        <motion.div
-          style={{ width: "100%", marginTop: 100 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <Flex width="100%" height="100%" justifyContent="center">
-            {/* Disable automatic match until I figure out how it should work */}
-            {/* <ButtonMatch /> */}
-            <ButtonViewPeople />
-          </Flex>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <Flex width="100%" height="100%" justifyContent="center" mt="100px">
+      <ExploreButton questionInputRef={questionInputRef} />
+    </Flex>
   );
 }
 
