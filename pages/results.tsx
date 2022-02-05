@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import ResultsSkeleton from "../src/flat/ResultsSkeleton";
 import ProgressBar from "../src/features/ProgressBar";
 import { setStep } from "../src/features/Progress/progressSlice";
 import PrimaryButton from "../src/flat/PrimaryButton";
+import TextLoader from "../src/flat/TextLoader";
 import useGetQuestionAvailableMentors from "../src/features/Question/hooks/useGetQuestionAvailableMentors";
 import { RootState } from "../src/store";
 import axios from "axios";
@@ -28,8 +29,11 @@ function Results() {
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const router = useRouter();
   const dispatch = useDispatch();
+  const [status, setStatus] = useState(null);
+  const [isWeak, setIsWeak] = useState(false);
   const { question } = useSelector((state: RootState) => state.question);
-
+  console.log(question);
+  // question.answer_needed_now
   if (!question.body) {
     router.push("/");
   }
@@ -42,11 +46,19 @@ function Results() {
           let response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/`
           );
+          setIsWeak(response.data.is_weak);
+          setStatus(response.data.status);
           return response.data;
         } catch (e) {
           console.error(e);
         }
       }
+    },
+    {
+      // only enable auto refreshing if mentors are dynamically fetched
+      // this only happens in the "now" case
+      refetchInterval:
+        !question.answer_needed_now || isWeak || status == "error" ? 0 : 5000,
     }
   );
 
@@ -58,11 +70,26 @@ function Results() {
     <Box w="100%">
       {isSmallerThan767 ? "" : <ProgressBar />}
       <QuestionHeader />
-      {query.isLoading || !query.data ? (
+      {(!query.data || query.data.available_coaches.length == 0) &&
+      !isWeak &&
+      question.answer_needed_now ? (
+        <TextLoader>
+          Looking for immediately available mentors. This might take a few
+          minutes...
+        </TextLoader>
+      ) : (
+        question.answer_needed_now && query.data?.is_weak && (
+          <Flex flexFlow="column" alignItems="center">
+            <WeakResults />
+            <AskAnotherQuestion />
+          </Flex>
+        )
+      )}
+      {(query.isLoading || !query.data) && !question.answer_needed_now ? (
         <ResultsSkeleton />
       ) : (
         <Flex justifyContent="center">
-          {query.data.available_coaches.map((mentor: any) => {
+          {query.data?.available_coaches.map((mentor: any) => {
             return (
               <React.Fragment key={mentor.surrogate}>
                 <Mentor
@@ -83,27 +110,29 @@ function Results() {
             color="gray.600"
             fontSize="xl"
           >
-            {query.data.available_on_other_times > 0 &&
-            query.data.available_coaches.length == 0 ? (
-              <Flex flexFlow="column" alignItems="center">
-                <NoResultsFoundThisTime
-                  availableOnOtherTimes={query.data.available_on_other_times}
-                />
-                <ChooseAnotherTime />
-              </Flex>
-            ) : query.data.status == "error" ? (
-              <Flex flexFlow="column" alignItems="center">
-                <CouldntProcessQuestion />
-                <AskAnotherQuestion />
-              </Flex>
-            ) : (
-              query.data.is_weak && (
+            {!question.answer_needed_now ? (
+              query.data.available_on_other_times > 0 &&
+              query.data.available_coaches.length == 0 ? (
                 <Flex flexFlow="column" alignItems="center">
-                  <WeakResults />
+                  <NoResultsFoundThisTime
+                    availableOnOtherTimes={query.data.available_on_other_times}
+                  />
+                  <ChooseAnotherTime />
+                </Flex>
+              ) : query.data.status == "error" ? (
+                <Flex flexFlow="column" alignItems="center">
+                  <CouldntProcessQuestion />
                   <AskAnotherQuestion />
                 </Flex>
+              ) : (
+                query.data.is_weak && (
+                  <Flex flexFlow="column" alignItems="center">
+                    <WeakResults />
+                    <AskAnotherQuestion />
+                  </Flex>
+                )
               )
-            )}
+            ) : null}
           </Flex>
         </Flex>
       )}

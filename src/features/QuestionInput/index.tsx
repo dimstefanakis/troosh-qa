@@ -71,7 +71,7 @@ function CharactersLeft(){
   }
 
   return(
-    <Flex>
+    <Flex px={4} mt={2}>
       <Text color="gray.600" fontSize="xs">{feedbackText}</Text>
     </Flex>
   )

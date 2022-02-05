@@ -7,6 +7,7 @@ interface QuestionStateInterface {
 interface QuestionInterface {
   body: string;
   initial_delivery_time: string;
+  answer_needed_now?: boolean;
   id?: string;
 }
 

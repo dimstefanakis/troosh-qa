@@ -16,6 +16,7 @@ import { UseMutationResult } from "react-query";
 import { setStep } from "../src/features/Progress/progressSlice";
 import { RootState } from "../src/store";
 import ProgressBar from "../src/features/ProgressBar";
+import TextLoader from "../src/flat/TextLoader";
 import useCreateQuestion from "../src/features/Question/hooks/useCreateQuestion";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -78,7 +79,12 @@ function WhenPage() {
   return (
     <>
       {isSmallerThan767 ? "" : <ProgressBar />}
-      <Flex position="relative" justifyContent="center" alignItems="center" width="100%">
+      <Flex
+        position="relative"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+      >
         <AnimateStateSwitch isVisible={selectedTime == ""}>
           <Flex flexFlow="column" alignItems="center" width="100%">
             <WhenHeader />
@@ -118,7 +124,9 @@ function WhenPage() {
           </Flex>
         </AnimateStateSwitch>
         <AnimateStateSwitch isVisible={selectedTime != ""}>
-          <NowSearch />
+          <Box mt={20}>
+            <TextLoader>Looking for currently available mentors...</TextLoader>
+          </Box>
         </AnimateStateSwitch>
       </Flex>
     </>
@@ -130,7 +138,7 @@ function AnimateStateSwitch({ children, isVisible }: AnimateStateSwitchProps) {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          style={{ height: "100%", width: '100%' }}
+          style={{ height: "100%", width: "100%" }}
           initial={{
             opacity: 0,
             transform: "scale(0.9)",
@@ -189,26 +197,6 @@ function WhenHeader() {
       <Text color="gray" mt={20}>
         Get an answer
       </Text>
-    </Flex>
-  );
-}
-
-function NowSearch() {
-  const router = useRouter();
-
-  return (
-    <Flex
-      fontSize="2xl"
-      color="#555555;"
-      marginTop="50px"
-      textAlign="center"
-      flexFlow="column"
-      justifyContent="center"
-      alignItems="center"
-      mt={20}
-    >
-      <Text maxW="80%">Looking for currently available mentors...</Text>
-      <Spinner mt={10} size="xl"/>
     </Flex>
   );
 }
