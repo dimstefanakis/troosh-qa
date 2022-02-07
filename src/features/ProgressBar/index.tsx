@@ -26,6 +26,7 @@ interface StepPopoverProps {
 }
 
 function ProgressBar() {
+
   return (
     <Flex
       justifyContent="center"
@@ -39,7 +40,7 @@ function ProgressBar() {
       <Flex w="100%" justifyContent="space-between">
         <StepDot step={0} StepPopover={<StepAskPopover />} />
         <StepDot step={1} StepPopover={<StepSelectTimePopover />} />
-        <StepDot step={2} StepPopover={<StepFinishPopover />}/>
+        <StepDot step={2} StepPopover={<StepFinishPopover />} />
       </Flex>
     </Flex>
   );

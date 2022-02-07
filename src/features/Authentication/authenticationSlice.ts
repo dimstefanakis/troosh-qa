@@ -73,7 +73,9 @@ export const getUserData = createAsyncThunk<
     userData.token = userToken;
     //axios.defaults.withCredentials = true;
     const token = userToken;
-    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+    if(token){
+      axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+    }
 
     if (userToken) {
       userData.token = userToken;

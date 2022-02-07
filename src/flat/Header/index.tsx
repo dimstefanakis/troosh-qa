@@ -1,5 +1,6 @@
 import { Flex, Box, Text, Stack, Input, Button, Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import HeaderMenu from "./Menu";
 import useWindowScroll from "../../hooks/useWindowScroll";
 
 function Header() {
@@ -16,17 +17,21 @@ function Header() {
       height="80px"
       alignItems="center"
       transition="all 0.2s"
+      px="60px"
       backgroundColor={scroll > 0 ? "#AAF0D1" : "transparent"}
     >
-      <Image
-        src="/logo_new.png"
-        height="40px"
-        borderRadius="100px"
-        cursor="pointer"
-        ml="60px"
+      <Flex
         onClick={() => router.push("/")}
-        alt=""
-      />
+        alignItems="center"
+        cursor="pointer"
+      >
+        <Image src="/logo_new.png" height="40px" borderRadius="100px" alt="" />
+        <Text ml={3} fontWeight="bold" fontSize="xl">
+          Troosh QA
+        </Text>
+      </Flex>
+      <Box flex="1"></Box>
+      <HeaderMenu/>
     </Flex>
   );
 }

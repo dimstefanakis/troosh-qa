@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import Header from "../Header";
+import Navigator from '../../features/Navigator';
 interface LayoutProps {
   children: JSX.Element;
 }
@@ -15,6 +16,7 @@ function Layout({ children }: LayoutProps) {
         flexFlow="column"
         paddingTop="120px"
         paddingBottom="60px"
+        px={3}
       >
         <Flex
           w="100%"
@@ -23,6 +25,7 @@ function Layout({ children }: LayoutProps) {
           alignItems="center"
           flexFlow="column"
         >
+          <Navigator/>
           {children}
         </Flex>
       </Flex>

@@ -56,7 +56,7 @@ function TabsBtn() {
   };
 
   return (
-    <Box marginTop="100px" width="100%" marginLeft="50px">
+    <Box marginTop="100px" width="100%" marginLeft="0px">
       <Tabs
         variant="soft-rounded"
         color="#AAF0D1"
@@ -66,7 +66,8 @@ function TabsBtn() {
         <TabList
           aria-orientation="vertical"
           marginRight="60px"
-          marginLeft="30px"
+          marginLeft={isSmallerThan767?"0px":"30px"}
+          paddingX="8px"
         >
           <Tab maxH="50px" fontSize="xl" onClick={profClick}>
             Profile
@@ -83,13 +84,17 @@ function TabsBtn() {
           width="100%"
         >
           <TabPanel
-            marginLeft={isSmallerThan767 ? "20px" : "30px"}
+            paddingX="15px"
+            paddingTop="10px"
+            marginLeft={isSmallerThan767 ? "0px" : "30px"}
             width="100%"
           >
             <ProfileDashboardTab />
           </TabPanel>
           <TabPanel
-            marginLeft={isSmallerThan767 ? "20px" : "30px"}
+            paddingTop="10px"
+            paddingX="15px"
+            marginLeft={isSmallerThan767 ? "0px" : "30px"}
             width="100%"
           >
             <InvTab />
@@ -104,7 +109,7 @@ function TabsBtn() {
 function InvTab() {
   return (
     <>
-      <Flex>
+      <Flex >
         <Box fontWeight="600">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id
           orci metus. Vestibulum sit amet odio in metus sagittis blandit.
