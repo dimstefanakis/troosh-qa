@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { IconButton } from "@chakra-ui/button";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Flex, Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
+import { RootState } from "../../../store";
 
 interface MenuLinkInterface {
   children: JSX.Element | string;
@@ -28,18 +30,27 @@ function MenuLink({ children, href }: MenuLinkInterface) {
 }
 
 function DesktopMenu() {
+  const { user } = useSelector((state: RootState) => state.authentication);
+
   return (
     <Flex>
-      <MenuLink href="/login">Mentor login</MenuLink>
+      <MenuLink href={user ? "/dashboard" : "/login"}>
+        {user ? "Dashboard" : "Mentor login"}
+      </MenuLink>
     </Flex>
   );
 }
 
 function MobileMenu() {
   const router = useRouter();
+  const { user } = useSelector((state: RootState) => state.authentication);
 
-  function onMentorLoginClick(){
-    router.push('/login');
+  function onMentorLoginClick() {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      router.push("/login");
+    }
   }
 
   return (
@@ -51,7 +62,9 @@ function MobileMenu() {
         variant="outline"
       />
       <MenuList>
-        <MenuItem onClick={onMentorLoginClick}>Mentor login</MenuItem>
+        <MenuItem onClick={onMentorLoginClick}>
+          {user ? "Dashboard" : "Mentor login"}
+        </MenuItem>
       </MenuList>
     </Menu>
   );

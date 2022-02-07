@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useToast } from "@chakra-ui/toast";
 import { Flex, Text, VStack, HStack } from "@chakra-ui/layout";
 import {
   FormControl,
@@ -68,6 +69,7 @@ function ProfileDashboardTab() {
   let time =
     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
+  const toast = useToast();
   const { user } = useSelector((state: RootState) => state.authentication);
   const subscriberMutation = useChangeSubscriberProfile();
   const mentorMutation = useChangeMentorProfile(user.coach?.surrogate);
