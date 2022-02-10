@@ -3,6 +3,12 @@ import { Flex, Text, Stack } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 
+const validPathNames = [
+  '/mentor',
+  '/results',
+  '/when'
+]
+
 function Navigator() {
   const router = useRouter();
 
@@ -31,13 +37,17 @@ function Navigator() {
     }
   }
 
+  const shouldShow = validPathNames.some((pathName) =>
+    router.pathname.startsWith(pathName)
+  );
   return (
-    <Flex width="100%" opacity={router.pathname === "/" ? 0 : 1} mb={2}>
+    <Flex width="100%" opacity={shouldShow ? 1 : 0} mb={2} height="50px">
       <Button
         leftIcon={<ChevronLeftIcon />}
         variant="unstyled"
-        display="flex"
+        display={shouldShow ? 'flex' : 'none'}
         onClick={onClick}
+        disabled={!shouldShow}
       >
         {backText}
       </Button>

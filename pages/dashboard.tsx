@@ -12,7 +12,11 @@ import {
   Tabs,
   TabPanels,
 } from "@chakra-ui/react";
+import MetaTab from "../src/features/Dashboard/Meta";
 import ProfileDashboardTab from "../src/features/Dashboard/Profile";
+import AvailabilityTab from "../src/features/Dashboard/Availability";
+import InvitationTab from "../src/features/Dashboard/Invitations";
+import MyAssignedQuestionsTab from "../src/features/Dashboard/MyAssignedQuestions";
 import PrimaryButton from "../src/flat/PrimaryButton";
 import SecondaryButton from "../src/flat/SecondaryButton";
 import { useRouter } from "next/router";
@@ -66,14 +70,23 @@ function TabsBtn() {
         <TabList
           aria-orientation="vertical"
           marginRight="60px"
-          marginLeft={isSmallerThan767?"0px":"30px"}
+          marginLeft={isSmallerThan767 ? "0px" : "30px"}
           paddingX="8px"
         >
           <Tab maxH="50px" fontSize="xl" onClick={profClick}>
             Profile
           </Tab>
+          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+            Availability
+          </Tab>
+          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+            Meta
+          </Tab>
           <Tab maxH="50px" fontSize="xl" onClick={invClick}>
             Invitations
+          </Tab>
+          <Tab maxH="50px" fontSize="xl" onClick={invClick}>
+            Questions
           </Tab>
         </TabList>
         <TabPanels
@@ -92,13 +105,37 @@ function TabsBtn() {
             <ProfileDashboardTab />
           </TabPanel>
           <TabPanel
+            paddingX="15px"
+            paddingTop="10px"
+            marginLeft={isSmallerThan767 ? "0px" : "30px"}
+            width="100%"
+          >
+            <AvailabilityTab />
+          </TabPanel>
+          <TabPanel
+            paddingX="15px"
+            paddingTop="10px"
+            marginLeft={isSmallerThan767 ? "0px" : "30px"}
+            width="100%"
+          >
+            <MetaTab />
+          </TabPanel>
+
+          <TabPanel
             paddingTop="10px"
             paddingX="15px"
             marginLeft={isSmallerThan767 ? "0px" : "30px"}
             width="100%"
           >
-            <InvTab />
-            <InvTab />
+            <InvitationTab />
+          </TabPanel>
+          <TabPanel
+            paddingTop="10px"
+            paddingX="15px"
+            marginLeft={isSmallerThan767 ? "0px" : "30px"}
+            width="100%"
+          >
+            <MyAssignedQuestionsTab />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -109,7 +146,7 @@ function TabsBtn() {
 function InvTab() {
   return (
     <>
-      <Flex >
+      <Flex>
         <Box fontWeight="600">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id
           orci metus. Vestibulum sit amet odio in metus sagittis blandit.
