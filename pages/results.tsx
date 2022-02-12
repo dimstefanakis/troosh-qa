@@ -73,35 +73,32 @@ function Results() {
       {(!query.data || query.data.available_coaches.length == 0) &&
       !isWeak &&
       question.answer_needed_now ? (
-        <TextLoader>
-          Looking for immediately available mentors. This might take a few
-          minutes...
-        </TextLoader>
+        <Flex mt="90px" justifyContent="center" alignItems="center">
+          <TextLoader>
+            Looking for immediately available mentors. This might take a few
+            minutes...
+          </TextLoader>
+        </Flex>
       ) : (
-        question.answer_needed_now && query.data?.is_weak && (
-          <Flex flexFlow="column" alignItems="center">
+        question.answer_needed_now &&
+        query.data?.is_weak && (
+          <Flex flexFlow="column" alignItems="center" mt="90px">
             <WeakResults />
             <AskAnotherQuestion />
           </Flex>
         )
       )}
       {(query.isLoading || !query.data) && !question.answer_needed_now ? (
-        <ResultsSkeleton />
+        <Flex
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+          mt="90px"
+        >
+          <ResultsSkeleton />
+        </Flex>
       ) : (
-        <Flex justifyContent="center">
-          {query.data?.available_coaches.map((mentor: any) => {
-            return (
-              <React.Fragment key={mentor.surrogate}>
-                <Mentor
-                  id={mentor.surrogate}
-                  name={mentor.name}
-                  expertise={mentor.expertise_field}
-                  icon={mentor.avatar}
-                  description={mentor.bio}
-                />
-              </React.Fragment>
-            );
-          })}
+        <Flex justifyContent="center" alignItems="center" flexFlow="column">
           <Flex
             justifyContent="center"
             alignItems="center"
@@ -109,30 +106,52 @@ function Results() {
             textAlign="center"
             color="gray.600"
             fontSize="xl"
+            mb={20}
           >
             {!question.answer_needed_now ? (
               query.data.available_on_other_times > 0 &&
               query.data.available_coaches.length == 0 ? (
-                <Flex flexFlow="column" alignItems="center">
+                <Flex flexFlow="column" alignItems="center" mt="90px">
                   <NoResultsFoundThisTime
                     availableOnOtherTimes={query.data.available_on_other_times}
                   />
                   <ChooseAnotherTime />
                 </Flex>
               ) : query.data.status == "error" ? (
-                <Flex flexFlow="column" alignItems="center">
+                <Flex flexFlow="column" alignItems="center" mt="90px">
                   <CouldntProcessQuestion />
                   <AskAnotherQuestion />
                 </Flex>
               ) : (
                 query.data.is_weak && (
-                  <Flex flexFlow="column" alignItems="center">
+                  <Flex flexFlow="column" alignItems="center" mt="90px">
                     <WeakResults />
-                    <AskAnotherQuestion />
+                    <TryDifferentWording />
                   </Flex>
                 )
               )
             ) : null}
+          </Flex>
+          <Flex flexFlow="column" width="100%">
+            {query.data?.available_coaches &&
+              query.data?.available_coaches.length > 0 && (
+                <Text textAlign="center" fontSize="xl" mb={10}>
+                  Mentors found
+                </Text>
+              )}
+            {query.data?.available_coaches.map((mentor: any) => {
+              return (
+                <React.Fragment key={mentor.surrogate}>
+                  <Mentor
+                    id={mentor.surrogate}
+                    name={mentor.name}
+                    expertise={mentor.expertise_field}
+                    icon={mentor.avatar}
+                    description={mentor.bio}
+                  />
+                </React.Fragment>
+              );
+            })}
           </Flex>
         </Flex>
       )}
@@ -191,7 +210,6 @@ function QuestionHeader() {
   return (
     <Flex>
       <Text
-        marginBottom="90px"
         fontWeight="800"
         paddingX={isSmallerThan767 ? "20px" : "0px"}
         width="100%"
@@ -232,10 +250,23 @@ function AskAnotherQuestion() {
   );
 }
 
+function TryDifferentWording() {
+  const router = useRouter();
+
+  function onClick() {
+    router.push("/");
+  }
+  return (
+    <PrimaryButton onClick={onClick} width="max-content" mt={10}>
+      Maybe try different wording
+    </PrimaryButton>
+  );
+}
+
 function WeakResults() {
   return (
     <Flex>
-      <Text>
+      <Text fontSize="xl" maxW="400px" textAlign="center">
         We couldn't fully process your question, the results might not be what
         you wanted
       </Text>
@@ -246,7 +277,9 @@ function WeakResults() {
 function CouldntProcessQuestion() {
   return (
     <Flex>
-      <Text>We could not process your question. Try rewording it!</Text>
+      <Text fontSize="xl" maxW="400px" textAlign="center">
+        We could not process your question. Try rewording it!
+      </Text>
     </Flex>
   );
 }

@@ -19,7 +19,7 @@ function Navigator() {
     backText = "Back to mentor list";
     previousDestination = "/results";
   } else if (router.pathname.startsWith("/when")) {
-    backText = "Ask a question";
+    backText = "Change question";
     previousDestination = "/";
   } else if (router.pathname.startsWith("/results")) {
     backText = "Choose time";

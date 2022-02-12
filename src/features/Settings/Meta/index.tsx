@@ -150,9 +150,9 @@ function MetaTab() {
                       })}
                     </VStack>
                     <FormLabel htmlFor="rate" mt={6}>
-                      Rate
+                      Rate (in EUR€)
                     </FormLabel>
-                    <Field name="name">
+                    <Field name="rate">
                       {({ field, form }: FieldProps) => (
                         <FormControl
                           isInvalid={!!(form.errors.name && form.touched.name)}
@@ -160,7 +160,7 @@ function MetaTab() {
                           <NumberInput
                             {...field}
                             id="rate"
-                            placeholder="$0"
+                            placeholder="0€"
                             value={rate}
                             onChange={handleRateChange}
                             isRequired

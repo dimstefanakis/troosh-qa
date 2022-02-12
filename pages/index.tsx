@@ -115,7 +115,7 @@ function SearchButtons({ questionInputRef }: SearchButtonsProps) {
   }, [question]);
 
   return (
-    <Flex width="100%" height="100%" justifyContent="center" mt="100px">
+    <Flex width="100%" height="100%" justifyContent="center" mt="30px">
       <ExploreButton questionInputRef={questionInputRef} />
     </Flex>
   );

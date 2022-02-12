@@ -5,6 +5,7 @@ import SecondaryButton from "../../../flat/SecondaryButton";
 import SkeletonLoader from "./SkeletonLoader";
 import useGetInvitations from "./hooks/useGetInvitations";
 import useRespondToInvitation from "./hooks/useRespondToInvitation";
+import timeSince from '../../../utils/timeSince';
 
 interface InvitationProps {
   id: string;
@@ -15,7 +16,7 @@ interface InvitationProps {
   created: string;
 }
 
-function InvitationTab() {
+function Invitations() {
   const query = useGetInvitations();
 
   if (query.isLoading) {
@@ -79,8 +80,8 @@ function Invitation({
   }, [respondMutation.isSuccess]);
 
   return (
-    <>
-      <Flex mb={10}>
+    <Box mb={10}>
+      <Flex>
         <Text fontWeight="600" fontSize="lg">
           {body}
         </Text>
@@ -89,7 +90,8 @@ function Invitation({
         {answerNeededNow ? (
           <Flex flexFlow="column">
             <Text>
-              Invitation by user sent at <Text as="b">{deliveryFormatted}</Text>
+              Invitation by user sent {" "}
+              <Text as="b">{timeSince(deliveryDate)} ago</Text>
             </Text>
             <Text as="i" color="gray.600">
               Make sure to be available for at least 45 minutes.
@@ -155,8 +157,8 @@ function Invitation({
           </>
         )}
       </Flex>
-    </>
+    </Box>
   );
 }
 
-export default InvitationTab;
+export default Invitations;
