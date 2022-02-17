@@ -32,7 +32,6 @@ function Results() {
   const [status, setStatus] = useState(null);
   const [isWeak, setIsWeak] = useState(false);
   const { question } = useSelector((state: RootState) => state.question);
-  console.log(question);
   // question.answer_needed_now
   if (!question.body) {
     router.push("/");

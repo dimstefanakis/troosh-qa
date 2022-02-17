@@ -96,7 +96,6 @@ function AvailabilityTab() {
     id: string,
     range: string
   ) {
-    console.log(e.currentTarget.value);
     // getting readonly errors so I have to reassign properties often
     let newAvailabilityTimeRanges = [...availableTimeRanges];
     const foundTimeRangeIndex = newAvailabilityTimeRanges.findIndex(

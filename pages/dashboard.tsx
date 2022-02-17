@@ -46,7 +46,7 @@ function DashboardTabs() {
       <Tabs variant="soft-rounded" colorScheme="green">
         <TabList paddingX="8px">
           <Tab maxH="50px" fontSize="xl">
-            Immediate Opportunities
+            Opportunities
           </Tab>
           <Tab maxH="50px" fontSize="xl">
             Upcoming

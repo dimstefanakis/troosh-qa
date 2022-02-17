@@ -15,10 +15,7 @@ import {
 import MetaTab from "../src/features/Settings/Meta";
 import ProfileDashboardTab from "../src/features/Settings/Profile";
 import AvailabilityTab from "../src/features/Settings/Availability";
-import InvitationTab from "../src/features/Dashboard/Invitations";
-import MyAssignedQuestionsTab from "../src/features/Dashboard/MyAssignedQuestions";
-import PrimaryButton from "../src/flat/PrimaryButton";
-import SecondaryButton from "../src/flat/SecondaryButton";
+import PaymentsTab from "../src/features/Settings/Payments";
 import { useRouter } from "next/router";
 import { useMediaQuery } from "@chakra-ui/react";
 
@@ -69,12 +66,15 @@ function TabsBtn() {
       >
         <TabList
           aria-orientation="vertical"
-          marginRight="60px"
           marginLeft={isSmallerThan767 ? "0px" : "30px"}
           paddingX="8px"
+          paddingRight="60px"
         >
           <Tab maxH="50px" fontSize="xl" onClick={profClick}>
             Profile
+          </Tab>
+          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+            Payments
           </Tab>
           <Tab maxH="50px" fontSize="xl" onClick={profClick}>
             Availability
@@ -97,6 +97,14 @@ function TabsBtn() {
             width="100%"
           >
             <ProfileDashboardTab />
+          </TabPanel>
+          <TabPanel
+            paddingX="15px"
+            paddingTop="10px"
+            marginLeft={isSmallerThan767 ? "0px" : "30px"}
+            width="100%"
+          >
+            <PaymentsTab />
           </TabPanel>
           <TabPanel
             paddingX="15px"

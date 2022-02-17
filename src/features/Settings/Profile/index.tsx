@@ -11,6 +11,13 @@ import {
   Textarea,
   Select,
 } from "@chakra-ui/react";
+import {
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+} from "@chakra-ui/react";
 import { CloseButton } from "@chakra-ui/close-button";
 import {
   Formik,
@@ -36,6 +43,7 @@ import days from "./days.json";
 interface FormValues {
   name: string;
   bio: string;
+  rate: string;
 }
 
 function fillZeros(value: string) {
@@ -62,11 +70,13 @@ function ProfileDashboardTab() {
   const mentorMutation = useChangeMentorProfile(user.coach?.surrogate);
   const [name, setName] = useState<string>(user.subscriber.name);
   const [bio, setBio] = useState<string>(user.coach.bio);
+  const [rate, setRate] = useState<string>(user.coach.qa_session_credit);
 
   useEffect(() => {
     if (user) {
       setName(user.subscriber.name);
       setBio(user.coach.bio);
+      setRate(user.coach.qa_session_credit);
     }
   }, [user]);
 
@@ -78,6 +88,7 @@ function ProfileDashboardTab() {
     if (user.coach) {
       let mentorFormData = new FormData();
       mentorFormData.append("bio", values.bio);
+      mentorFormData.append("qa_session_credit", rate.toString());
       mentorMutation.mutate(mentorFormData);
     }
   }
@@ -93,6 +104,12 @@ function ProfileDashboardTab() {
       });
     }
   }, [mentorMutation.isSuccess, subscriberMutation.isSuccess]);
+  
+  function handleRateChange(valueAsString: string, valueAsNumber: number) {
+    setRate(valueAsString);
+  }
+
+  console.log("date", rate)
 
   return (
     <Flex flexFlow="column">
@@ -100,6 +117,7 @@ function ProfileDashboardTab() {
         initialValues={{
           name: name,
           bio: bio,
+          rate: rate,
         }}
         onSubmit={(values, action) => {
           handleSubmit(values);
@@ -138,12 +156,36 @@ function ProfileDashboardTab() {
                     <FormLabel htmlFor="bio">Bio</FormLabel>
                     <Textarea
                       {...field}
+                      minH="160px"
+                      maxLength={160}
                       size="lg"
                       id="bio"
                       placeholder="Some info about you and what you do"
                       variant="filled"
                       isRequired
                     />
+                    {/* <FormErrorMessage>{form.errors.name}</FormErrorMessage> */}
+                  </FormControl>
+                )}
+              </Field>
+              <FormLabel htmlFor="rate" mt={6}>
+                Rate per 30 minutes (in EUR€)
+              </FormLabel>
+              <Field name="rate">
+                {({ field, form }: FieldProps) => (
+                  <FormControl
+                    isInvalid={!!(form.errors.name && form.touched.name)}
+                  >
+                    <NumberInput
+                      {...field}
+                      id="rate"
+                      placeholder="15€"
+                      value={rate}
+                      onChange={handleRateChange}
+                      isRequired
+                    >
+                      <NumberInputField />
+                    </NumberInput>
                     {/* <FormErrorMessage>{form.errors.name}</FormErrorMessage> */}
                   </FormControl>
                 )}

@@ -13,6 +13,7 @@ import { setStep } from "../src/features/Progress/progressSlice";
 import getCharactersLeft from "../src/utils/getCharactersLeft";
 import styles from "../styles/Home.module.css";
 import { useMediaQuery } from "@chakra-ui/react";
+import useAcceptInvitationMutation from "../src/hooks/useAcceptInvitationMutation";
 
 interface SearchButtonsProps {
   questionInputRef: React.RefObject<HTMLTextAreaElement>;
@@ -24,6 +25,10 @@ interface ExploreButtonProps {
 
 const Home: NextPage = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const toast = useToast();
+  const { qiid, accept } = router.query;
+  const acceptInvitation = useAcceptInvitationMutation(qiid);
   const questionInputRef = useRef<HTMLTextAreaElement>(null);
   const { question } = useSelector((state: RootState) => state.question);
 
@@ -32,6 +37,24 @@ const Home: NextPage = () => {
   useEffect(() => {
     dispatch(setStep(0));
   }, []);
+
+  useEffect(() => {
+    if (qiid && accept == "true") {
+      acceptInvitation.mutate();
+    }
+  }, [qiid]);
+
+  useEffect(() => {
+    if (qiid && acceptInvitation.isSuccess) {
+      toast({
+        title: "Invitation accepted!",
+        description: 'You will now appear as "available" for this question!',
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [acceptInvitation.isSuccess, qiid]);
 
   return (
     <>
@@ -79,7 +102,6 @@ function ExploreButton({ questionInputRef }: ExploreButtonProps) {
       toast({
         description: getCharactersLeft(question),
       });
-      console.log(questionInputRef.current);
       questionInputRef.current?.focus();
     }
   };

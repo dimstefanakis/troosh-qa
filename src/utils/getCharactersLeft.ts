@@ -1,7 +1,6 @@
 import {QuestionInterface} from '../features/Question/interface'
 
 function getCharactersLeft(question: QuestionInterface){
-  console.log("qyestion", question)
   let feedbackText = ''
   if (question.body.length == 0) {
     feedbackText = "Type a question!";

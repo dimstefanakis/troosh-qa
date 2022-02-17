@@ -10,13 +10,6 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { CloseButton } from "@chakra-ui/close-button";
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-} from "@chakra-ui/react";
 import { Formik, Form, Field, FieldProps } from "formik";
 import { v4 as uuidv4 } from "uuid";
 import AddButton from "../../../flat/AddButton";
@@ -33,7 +26,6 @@ function MetaTab() {
   const toast = useToast();
   const { user } = useSelector((state: RootState) => state.authentication);
   const commonQuestionsMutation = useChangeCommonQuestions();
-  const [rate, setRate] = useState(user.coach.qa_session_credit);
   const [commonQuestions, setCommonQuestions] = useState<CommonQuestion[]>(
     user.coach.common_questions
       ? user.coach.common_questions.map((question: any) => ({
@@ -82,10 +74,6 @@ function MetaTab() {
       body: "",
     });
     setCommonQuestions(newCommonQuestions);
-  }
-
-  function handleRateChange(valueAsString: string, valueAsNumber: number) {
-    console.log(valueAsString, valueAsNumber);
   }
 
   useEffect(() => {
@@ -149,29 +137,6 @@ function MetaTab() {
                         );
                       })}
                     </VStack>
-                    <FormLabel htmlFor="rate" mt={6}>
-                      Rate (in EUR€)
-                    </FormLabel>
-                    <Field name="rate">
-                      {({ field, form }: FieldProps) => (
-                        <FormControl
-                          isInvalid={!!(form.errors.name && form.touched.name)}
-                        >
-                          <NumberInput
-                            {...field}
-                            id="rate"
-                            placeholder="0€"
-                            value={rate}
-                            onChange={handleRateChange}
-                            isRequired
-                          >
-                            <NumberInputField />
-                          </NumberInput>
-                          {/* <FormErrorMessage>{form.errors.name}</FormErrorMessage> */}
-                        </FormControl>
-                      )}
-                    </Field>
-
                     <Flex
                       w="100%"
                       justifyContent="center"
