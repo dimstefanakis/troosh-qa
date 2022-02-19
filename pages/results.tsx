@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
+import { Button } from "@chakra-ui/button";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import ResultsSkeleton from "../src/flat/ResultsSkeleton";
 import ProgressBar from "../src/features/ProgressBar";
 import { setStep } from "../src/features/Progress/progressSlice";
 import PrimaryButton from "../src/flat/PrimaryButton";
 import TextLoader from "../src/flat/TextLoader";
+import SecondaryButton from "../src/flat/SecondaryButton";
 import useGetQuestionAvailableMentors from "../src/features/Question/hooks/useGetQuestionAvailableMentors";
 import { RootState } from "../src/store";
 import axios from "axios";
@@ -26,11 +30,16 @@ interface NoResultsFoundThisTimeProps {
 }
 
 function Results() {
-  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const router = useRouter();
   const dispatch = useDispatch();
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+
   const [status, setStatus] = useState(null);
   const [isWeak, setIsWeak] = useState(false);
+  const [selectedExpertise, setSelectedExpertise] = useState<string | null>(
+    null
+  );
+
   const { question } = useSelector((state: RootState) => state.question);
   // question.answer_needed_now
   if (!question.body) {
@@ -38,13 +47,17 @@ function Results() {
   }
 
   const query = useQuery(
-    ["getQuestionAvailableMentors", question.id],
+    ["getQuestionAvailableMentors", question.id, selectedExpertise],
     async () => {
       if (question.id) {
         try {
-          let response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/`
-          );
+          let url;
+          if(selectedExpertise){
+            url = `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/?expertise=${selectedExpertise}`;
+          }else{
+            url = `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/`;
+          }
+          let response = await axios.get(url);
           setIsWeak(response.data.is_weak);
           setStatus(response.data.status);
           return response.data;
@@ -65,10 +78,11 @@ function Results() {
     dispatch(setStep(1));
   }, []);
 
+  console.log("query", query.data);
   return (
     <Box w="100%">
       {isSmallerThan767 ? "" : <ProgressBar />}
-      <QuestionHeader />
+      <QuestionHeader expertise={query.data?.expertise} setSelectedExpertise={setSelectedExpertise}/>
       {(!query.data || query.data.available_coaches.length == 0) &&
       !isWeak &&
       question.answer_needed_now ? (
@@ -201,11 +215,19 @@ function Mentor({ icon, name, expertise, description, id }: MentorProps) {
   );
 }
 
-function QuestionHeader() {
-  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
+interface QuestionHeaderProps {
+  expertise: string;
+  setSelectedExpertise: React.Dispatch<React.SetStateAction<string | null>>;
+}
 
+function QuestionHeader({
+  expertise,
+  setSelectedExpertise,
+}: QuestionHeaderProps) {
+  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const { question } = useSelector((state: RootState) => state.question);
 
+  console.log("expertise", expertise);
   return (
     <Flex>
       <Text
@@ -216,8 +238,45 @@ function QuestionHeader() {
         justifyContent="center"
         alignItems="center"
         textAlign="center"
+        display="flex"
+        flexFlow="row wrap"
       >
-        {question.body}
+        We think your question is about{" "}
+        {expertise ? (
+          <Box display="inline-block">
+            <Menu>
+              <MenuButton
+                as={Button}
+                fontWeight="800"
+                backgroundColor="#FFD29B"
+                _hover={{ bg: "#f5c68c" }}
+                variant="solid"
+                fontSize="xl"
+                whiteSpace="normal"
+                m={2}
+                _active={{
+                  bg: "#f7c17e",
+                }}
+                rightIcon={<ChevronDownIcon />}
+              >
+                {expertise}
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => setSelectedExpertise("programming")}>
+                  Programming
+                </MenuItem>
+                <MenuItem onClick={() => setSelectedExpertise("fitness")}>
+                  Fitness
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
+        ) : (
+          // <Text p={3} borderRadius="10px" bg="#FFD29B" display="inline-block">
+          //   {expertise}
+          // </Text>
+          "..."
+        )}
       </Text>
     </Flex>
   );

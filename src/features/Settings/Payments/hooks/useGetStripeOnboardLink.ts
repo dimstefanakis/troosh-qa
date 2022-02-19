@@ -5,7 +5,7 @@ function useGetStripeOnboardLink() {
   const query = useQuery(["getStripeOnboardLink"], async () => {
     try {
       let response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/create_stripe_account_link/`
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/create_stripe_account_link_qa/`
       );
       return response.data;
     } catch (e) {

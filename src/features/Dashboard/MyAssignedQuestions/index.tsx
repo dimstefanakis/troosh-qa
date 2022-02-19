@@ -36,7 +36,7 @@ function MyAssignedQuestions({ type, query }: MyAssignedQuestionsProps) {
           return (
             <React.Fragment key={question.id}>
               <Flex flexFlow="column" mb={10}>
-                <Text fontWeight="600" fontSize="lg">
+                <Text fontWeight="600" fontSize="lg" width="100%">
                   {question.body}
                 </Text>
                 {type === "archived" ? (

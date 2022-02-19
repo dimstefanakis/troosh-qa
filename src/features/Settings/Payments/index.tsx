@@ -56,7 +56,11 @@ function Payments() {
       ) : (
         <Flex flexFlow="column">
           <Text>{text}</Text>
-          <PrimaryButton isLoading={query.isLoading} onClick={onSetupClick} margin="20px 0">
+          <PrimaryButton
+            isLoading={query.isLoading}
+            onClick={onSetupClick}
+            margin="20px 0"
+          >
             Setup payments
           </PrimaryButton>
         </Flex>

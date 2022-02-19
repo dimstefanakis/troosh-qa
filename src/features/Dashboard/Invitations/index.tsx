@@ -82,7 +82,7 @@ function Invitation({
   return (
     <Box mb={10}>
       <Flex>
-        <Text fontWeight="600" fontSize="lg">
+        <Text fontWeight="600" fontSize="lg" width="100%">
           {body}
         </Text>
       </Flex>

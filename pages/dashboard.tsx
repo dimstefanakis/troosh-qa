@@ -49,10 +49,10 @@ function DashboardTabs() {
             Opportunities
           </Tab>
           <Tab maxH="50px" fontSize="xl">
-            Upcoming
+            Scheduled
           </Tab>
           <Tab maxH="50px" fontSize="xl">
-            Archived
+            Delivered
           </Tab>
         </TabList>
         <TabPanels width="100%">
