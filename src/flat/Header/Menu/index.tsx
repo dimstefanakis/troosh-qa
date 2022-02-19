@@ -26,7 +26,11 @@ function MenuLink({ children, href }: MenuLinkInterface) {
     router.push(href);
   }
 
-  return <Text onClick={onClick}>{children}</Text>;
+  return (
+    <Text onClick={onClick} ml={4} cursor="pointer">
+      {children}
+    </Text>
+  );
 }
 
 function DesktopMenu() {
@@ -34,9 +38,14 @@ function DesktopMenu() {
 
   return (
     <Flex>
-      <MenuLink href={user ? "/dashboard" : "/login"}>
-        {user ? "Dashboard" : "Mentor login"}
-      </MenuLink>
+      {user ? (
+        <>
+          <MenuLink href="/dashboard">Dashboard</MenuLink>
+          <MenuLink href="/settings">Settings</MenuLink>
+        </>
+      ) : (
+        <MenuLink href="/login">Mentor login</MenuLink>
+      )}
     </Flex>
   );
 }
@@ -45,12 +54,16 @@ function MobileMenu() {
   const router = useRouter();
   const { user } = useSelector((state: RootState) => state.authentication);
 
-  function onMentorLoginClick() {
-    if (user) {
-      router.push("/dashboard");
-    } else {
-      router.push("/login");
-    }
+  function onLoginClick() {
+    router.push("/login");
+  }
+
+  function onSettingsClick() {
+    router.push("/settings");
+  }
+
+  function onDashboardClick() {
+    router.push("/dashboard");
   }
 
   return (
@@ -62,9 +75,14 @@ function MobileMenu() {
         variant="outline"
       />
       <MenuList>
-        <MenuItem onClick={onMentorLoginClick}>
-          {user ? "Dashboard" : "Mentor login"}
-        </MenuItem>
+        {user ? (
+          <>
+            <MenuItem onClick={onDashboardClick}>Dashboard</MenuItem>
+            <MenuItem onClick={onSettingsClick}>Settings</MenuItem>
+          </>
+        ) : (
+          <MenuItem onClick={onLoginClick}>Mentor login</MenuItem>
+        )}
       </MenuList>
     </Menu>
   );

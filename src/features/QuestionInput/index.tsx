@@ -8,11 +8,11 @@ import { RootState } from "../../store";
 import styles from "./QuestionInput.module.css";
 import { useMediaQuery } from "@chakra-ui/react";
 
-interface QuestionInputProps{
-  questionInputRef: React.RefObject<HTMLTextAreaElement>
+interface QuestionInputProps {
+  questionInputRef: React.RefObject<HTMLTextAreaElement>;
 }
 
-function QuestionInput({questionInputRef}: QuestionInputProps) {
+function QuestionInput({ questionInputRef }: QuestionInputProps) {
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const dispatch = useDispatch();
 
@@ -25,15 +25,14 @@ function QuestionInput({questionInputRef}: QuestionInputProps) {
   return (
     <Flex
       flexFlow="column"
-      marginTop="90px"
-      marginLeft={isSmallerThan767 ? "50px" : "0px"}
+      marginTop="60px"
       width="100%"
       maxW="400px"
       fontSize="xl"
       className={question.body.length > 0 ? "" : styles.textareaContainer}
     >
       <Textarea
-      layerStyle="selected"
+        layerStyle="selected"
         ref={questionInputRef}
         borderColor="transparent"
         minLength={30}
@@ -47,7 +46,9 @@ function QuestionInput({questionInputRef}: QuestionInputProps) {
         value={question.body}
         onChange={questionChange}
         as={ResizeTextarea}
-        placeholder={`If I want to maximize tricep development and want to do it with 2 movements in addition to bench and OHP, are dips and overhead cable tricep extension good choices?\n\nWhich global state management can I use with React Query?`}
+        // placeholder={`Ask something, it can be as specific as you want. The subjects we currently support are fitness and software development. `}
+        placeholder={`Ask anything related to fitness / software development. `}
+        textAlign={question.body.length > 0 ? "start" : "center"}
         // textAlign="center"
         size=""
       />
@@ -56,9 +57,9 @@ function QuestionInput({questionInputRef}: QuestionInputProps) {
   );
 }
 
-function CharactersLeft(){
+function CharactersLeft() {
   const { question } = useSelector((state: RootState) => state.question);
-  let feedbackText = ''
+  let feedbackText = "";
 
   if (question.body.length == 0) {
     feedbackText = "";
@@ -70,11 +71,13 @@ function CharactersLeft(){
     feedbackText = "Ready to go!";
   }
 
-  return(
+  return (
     <Flex px={4} mt={2}>
-      <Text color="gray.600" fontSize="xs">{feedbackText}</Text>
+      <Text color="gray.600" fontSize="xs">
+        {feedbackText}
+      </Text>
     </Flex>
-  )
+  );
 }
 
 export default QuestionInput;

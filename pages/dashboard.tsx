@@ -1,7 +1,4 @@
 import {
-  Flex,
-  Image,
-  Text,
   Box,
   LinkBox,
   LinkOverlay,
@@ -12,17 +9,17 @@ import {
   Tabs,
   TabPanels,
 } from "@chakra-ui/react";
-import ProfileDashboardTab from "../src/features/Dashboard/Profile";
-import PrimaryButton from "../src/flat/PrimaryButton";
-import SecondaryButton from "../src/flat/SecondaryButton";
-import { useRouter } from "next/router";
-import { useMediaQuery } from "@chakra-ui/react";
+import { Text, Flex } from "@chakra-ui/layout";
+import MyAssignedQuestions from "../src/features/Dashboard/MyAssignedQuestions";
+import Invitations from "../src/features/Dashboard/Invitations";
+import UpcomingQuestions from "../src/features/Dashboard/UpcomingQuestions";
+import ArchivedQuestions from "../src/features/Dashboard/ArchivedQuestions";
 
 function Dashboard() {
   return (
     <>
       <DashboardText />
-      <TabsBtn />
+      <DashboardTabs />
     </>
   );
 }
@@ -38,123 +35,39 @@ function DashboardText() {
       textAlign="center"
       fontWeight="600"
     >
-      Dashboard
+      <Text>Question Dashboard</Text>
     </Flex>
   );
 }
 
-function TabsBtn() {
-  const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
-  const router = useRouter();
-
-  const invClick = () => {
-    router.push("/dashboard?tab=invitation");
-  };
-
-  const profClick = () => {
-    router.push("/dashboard?tab=profile");
-  };
-
+function DashboardTabs() {
   return (
     <Box marginTop="100px" width="100%" marginLeft="0px">
-      <Tabs
-        variant="soft-rounded"
-        color="#AAF0D1"
-        colorScheme="green"
-        orientation={isSmallerThan767 ? "horizontal" : "vertical"}
-      >
-        <TabList
-          aria-orientation="vertical"
-          marginRight="60px"
-          marginLeft={isSmallerThan767?"0px":"30px"}
-          paddingX="8px"
-        >
-          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
-            Profile
+      <Tabs variant="soft-rounded" colorScheme="green">
+        <TabList paddingX="8px">
+          <Tab maxH="50px" fontSize="xl">
+            Opportunities
           </Tab>
-          <Tab maxH="50px" fontSize="xl" onClick={invClick}>
-            Invitations
+          <Tab maxH="50px" fontSize="xl">
+            Scheduled
+          </Tab>
+          <Tab maxH="50px" fontSize="xl">
+            Delivered
           </Tab>
         </TabList>
-        <TabPanels
-          color="black"
-          borderLeft={
-            isSmallerThan767 ? "0px solid #999999" : "2px solid #999999"
-          }
-          width="100%"
-        >
-          <TabPanel
-            paddingX="15px"
-            paddingTop="10px"
-            marginLeft={isSmallerThan767 ? "0px" : "30px"}
-            width="100%"
-          >
-            <ProfileDashboardTab />
+        <TabPanels width="100%">
+          <TabPanel paddingX="15px" paddingTop="10px" width="100%">
+            <Invitations />
           </TabPanel>
-          <TabPanel
-            paddingTop="10px"
-            paddingX="15px"
-            marginLeft={isSmallerThan767 ? "0px" : "30px"}
-            width="100%"
-          >
-            <InvTab />
-            <InvTab />
+          <TabPanel paddingX="15px" paddingTop="10px" width="100%">
+            <UpcomingQuestions />
+          </TabPanel>
+          <TabPanel paddingX="15px" paddingTop="10px" width="100%">
+            <ArchivedQuestions />
           </TabPanel>
         </TabPanels>
       </Tabs>
     </Box>
-  );
-}
-
-function InvTab() {
-  return (
-    <>
-      <Flex >
-        <Box fontWeight="600">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id
-          orci metus. Vestibulum sit amet odio in metus sagittis blandit.
-          Aliquam vehicula tortor vitae odio varius finibus.
-        </Box>
-      </Flex>
-      <Flex marginTop="10px">
-        <Text color="#999999" fontWeight="600">
-          For 12/12/2022 6:00PM
-        </Text>
-      </Flex>
-      <Flex marginTop="20px" marginBottom="40px">
-        <PrimaryButton
-          borderRadius="26"
-          fontSize="l"
-          m="0"
-          marginTop="10px"
-          fontWeight="600"
-        >
-          Accept
-        </PrimaryButton>
-        <SecondaryButton
-          borderRadius="26"
-          fontSize="l"
-          m="0"
-          marginLeft="1"
-          marginTop="10px"
-          fontWeight="600"
-        >
-          Decline
-        </SecondaryButton>
-      </Flex>
-    </>
-  );
-}
-
-function ProfTab() {
-  return (
-    <Flex>
-      <Box fontWeight="600">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id orci
-        metus. Vestibulum sit amet odio in metus sagittis blandit. Aliquam
-        vehicula tortor vitae odio varius finibus.2
-      </Box>
-    </Flex>
   );
 }
 

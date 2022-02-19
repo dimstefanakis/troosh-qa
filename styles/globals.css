@@ -12,6 +12,16 @@ a {
   text-decoration: none;
 }
 
+.chakra-tabs__tablist{
+  padding: 5px 0;
+  margin: 12px -12px;
+  overflow: auto;
+}
+
+.chakra-tabs__tab{
+  white-space: nowrap;
+}
+
 * {
   box-sizing: border-box;
 }

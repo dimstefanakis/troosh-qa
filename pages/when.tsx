@@ -68,7 +68,6 @@ function WhenPage() {
     }
   }, [createQuestion.data]);
 
-  console.log(question);
   // redirect only after redux store is populated with the question
   useEffect(() => {
     if (question.id && createQuestion.isSuccess && createQuestion.data) {
@@ -102,8 +101,8 @@ function WhenPage() {
                 <Flex>ASAP</Flex>
               </TimeButton>
             </Flex>
-            <Flex>
-              <Flex mt={5} justifyContent="center" alignItems="center">
+            <Flex width="100%">
+              <Flex mt={5} justifyContent="center" alignItems="center" width="100%" flexFlow="row wrap">
                 <Flex>
                   <TimeButton onClick={() => handleWhenClick("6")}>
                     6 hours from now

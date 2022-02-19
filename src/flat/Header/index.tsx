@@ -17,7 +17,7 @@ function Header() {
       height="80px"
       alignItems="center"
       transition="all 0.2s"
-      px="60px"
+      px={{base: '20px', md: '60px'}}
       backgroundColor={scroll > 0 ? "#AAF0D1" : "transparent"}
     >
       <Flex

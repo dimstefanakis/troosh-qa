@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Flex, Text, VStack, HStack } from "@chakra-ui/layout";
+import { useToast } from "@chakra-ui/toast";
 import {
   FormControl,
   FormLabel,
@@ -26,7 +27,7 @@ import { RootState } from "../../../store";
 import AddButton from "../../../flat/AddButton";
 import PrimaryButton from "../../../flat/PrimaryButton";
 import { v4 as uuidv4 } from "uuid";
-import days from './days.json';
+import days from "./days.json";
 
 interface AvailabilityTimeRange {
   id: any;
@@ -40,6 +41,7 @@ function AvailabilityTab() {
   let time =
     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
+  const toast = useToast();
   const { user } = useSelector((state: RootState) => state.authentication);
   const availabilityMutation = useChangeAvailabilityTimeRanges();
   const [selectedDay, setSelectedDay] = useState<number>(1);
@@ -94,7 +96,6 @@ function AvailabilityTab() {
     id: string,
     range: string
   ) {
-    console.log(e.currentTarget.value);
     // getting readonly errors so I have to reassign properties often
     let newAvailabilityTimeRanges = [...availableTimeRanges];
     const foundTimeRangeIndex = newAvailabilityTimeRanges.findIndex(
@@ -139,98 +140,112 @@ function AvailabilityTab() {
     setAvailableTimeRanges(newTimeRanges);
   }
 
-    return (
-      <Flex flexFlow="column">
-        <Formik
-          initialValues={{
-          }}
-          onSubmit={(values, action) => {
-            handleSubmit();
-          }}
-        >
-          {() => {
-            return (
-              <Form
-                style={{ display: "flex", flexFlow: "column", width: "100%" }}
+  useEffect(() => {
+    if (availabilityMutation.isSuccess) {
+      toast({
+        title: "Availability saved.",
+        description: "Your changes to your availability have been saved!",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [availabilityMutation.isSuccess]);
+
+  return (
+    <Flex flexFlow="column">
+      <Formik
+        initialValues={{}}
+        onSubmit={(values, action) => {
+          handleSubmit();
+        }}
+      >
+        {() => {
+          return (
+            <Form
+              style={{ display: "flex", flexFlow: "column", width: "100%" }}
+            >
+              <FormLabel htmlFor="availability">Availability</FormLabel>
+
+              <Select
+                placeholder="Select option"
+                defaultValue="1"
+                onChange={handleDayChange}
               >
-                <FormLabel htmlFor="availability">Availability</FormLabel>
-
-                <Select
-                  placeholder="Select option"
-                  defaultValue="1"
-                  onChange={handleDayChange}
-                >
-                  {days.map((day) => {
-                    return <option value={day.value}>{day.label}</option>;
+                {days.map((day) => {
+                  return <option value={day.value}>{day.label}</option>;
+                })}
+              </Select>
+              <VStack mt={3}>
+                {availableTimeRanges
+                  .filter(
+                    (timeRange: AvailabilityTimeRange) =>
+                      timeRange.weekday == selectedDay
+                  )
+                  .map((timeRange: AvailabilityTimeRange, i: number) => {
+                    return (
+                      <HStack key={i} w="100%">
+                        <InputGroup alignItems="center">
+                          <Input
+                            type="time"
+                            onChange={(e) =>
+                              onTimeChange(e, timeRange.id, "start")
+                            }
+                            size="lg"
+                            id="timeRangeStart"
+                            variant="filled"
+                            isRequired
+                            value={timeRange.start_time}
+                            // @ts-ignore:next-line
+                            maskChar=""
+                          />
+                        </InputGroup>
+                        <Text>to</Text>
+                        <InputGroup alignItems="center">
+                          <Input
+                            type="time"
+                            onChange={(e) =>
+                              onTimeChange(e, timeRange.id, "end")
+                            }
+                            size="lg"
+                            id="timeRangeEnd"
+                            variant="filled"
+                            isRequired
+                            value={timeRange.end_time}
+                            // @ts-ignore:next-line
+                            maskChar=""
+                          />
+                          <InputRightElement top="inherit">
+                            <CloseButton
+                              onClick={() => onTimeRangeRemove(timeRange.id)}
+                            />
+                          </InputRightElement>
+                        </InputGroup>
+                      </HStack>
+                    );
                   })}
-                </Select>
-                <VStack mt={3}>
-                  {availableTimeRanges
-                    .filter(
-                      (timeRange: AvailabilityTimeRange) =>
-                        timeRange.weekday == selectedDay
-                    )
-                    .map((timeRange: AvailabilityTimeRange, i: number) => {
-                      return (
-                        <HStack key={i} w="100%">
-                          <InputGroup alignItems="center">
-                            <Input
-                              type="time"
-                              onChange={(e) =>
-                                onTimeChange(e, timeRange.id, "start")
-                              }
-                              size="lg"
-                              id="timeRangeStart"
-                              variant="filled"
-                              isRequired
-                              value={timeRange.start_time}
-                              // @ts-ignore:next-line
-                              maskChar=""
-                            />
-                          </InputGroup>
-                          <Text>to</Text>
-                          <InputGroup alignItems="center">
-                            <Input
-                              type="time"
-                              onChange={(e) =>
-                                onTimeChange(e, timeRange.id, "end")
-                              }
-                              size="lg"
-                              id="timeRangeEnd"
-                              variant="filled"
-                              isRequired
-                              value={timeRange.end_time}
-                              // @ts-ignore:next-line
-                              maskChar=""
-                            />
-                            <InputRightElement top="inherit">
-                              <CloseButton
-                                onClick={() => onTimeRangeRemove(timeRange.id)}
-                              />
-                            </InputRightElement>
-                          </InputGroup>
-                        </HStack>
-                      );
-                    })}
-                  <Flex
-                    w="100%"
-                    justifyContent="center"
-                    alignItems="center"
-                    mt={6}
-                  >
-                    <AddButton onClick={onNewTimeRangeClick} />
-                  </Flex>
-                </VStack>
-                <PrimaryButton mt={10} type="submit">
-                  Save
-                </PrimaryButton>
-              </Form>
-            );
-          }}
-        </Formik>
-      </Flex>
-    );
-
+                <Flex
+                  w="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                  mt={6}
+                >
+                  <AddButton onClick={onNewTimeRangeClick} />
+                </Flex>
+              </VStack>
+              <PrimaryButton
+                mt={10}
+                type="submit"
+                isLoading={availabilityMutation.isLoading}
+              >
+                Save
+              </PrimaryButton>
+            </Form>
+          );
+        }}
+      </Formik>
+    </Flex>
+  );
 }
 
 export default AvailabilityTab;
