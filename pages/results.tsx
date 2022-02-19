@@ -325,8 +325,8 @@ function WeakResults() {
   return (
     <Flex>
       <Text fontSize="xl" maxW="400px" textAlign="center">
-        We couldn't fully process your question, the results might not be what
-        you wanted
+        We couldn&apos;t fully process your question, the results might not be
+        what you wanted
       </Text>
     </Flex>
   );
