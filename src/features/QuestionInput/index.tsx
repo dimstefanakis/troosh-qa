@@ -47,9 +47,8 @@ function QuestionInput({ questionInputRef }: QuestionInputProps) {
         onChange={questionChange}
         as={ResizeTextarea}
         // placeholder={`Ask something, it can be as specific as you want. The subjects we currently support are fitness and software development. `}
-        placeholder={`Ask anything related to fitness / software development. `}
+        placeholder={`How can I do x? I need someone to help me with y.`}
         textAlign={question.body.length > 0 ? "start" : "center"}
-        // textAlign="center"
         size=""
       />
       <CharactersLeft />
@@ -59,10 +58,10 @@ function QuestionInput({ questionInputRef }: QuestionInputProps) {
 
 function CharactersLeft() {
   const { question } = useSelector((state: RootState) => state.question);
-  let feedbackText = "";
+  let feedbackText;
 
   if (question.body.length == 0) {
-    feedbackText = "";
+    feedbackText = '';
   } else if (question.body.length < 15) {
     feedbackText = "Your question is too broad";
   } else if (question.body.length < 30) {

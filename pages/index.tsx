@@ -2,7 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
-import { Flex, Button, Image, LinkOverlay, LinkBox } from "@chakra-ui/react";
+import { Flex, Button, Text, Heading } from "@chakra-ui/react";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
@@ -79,13 +90,37 @@ function QuestionHeader() {
   return (
     <Flex
       fontSize="3xl"
-      maxWidth="400px"
+      maxWidth="600px"
       height="25%"
       justifyContent="center"
       alignItems="center"
       textAlign="center"
     >
-      Got a question? Get answers from mentors.
+      <Heading fontSize="3xl">
+        Got a question?
+        <br /> Get answers from{" "}
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Text
+              display="inline-block"
+              px={3}
+              py={2}
+              mt={3}
+              borderRadius="10px"
+              backgroundColor="#FFD29B"
+              cursor="pointer"
+            >
+              mentors
+            </Text>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverBody fontSize="md" fontWeight="medium">
+              We currently support mentors in the following fields:{" "}
+              <Text as="b">software development / fitness</Text>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+      </Heading>
     </Flex>
   );
 }

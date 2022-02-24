@@ -11,6 +11,7 @@ import Layout from "../src/flat/Layout";
 import SplashScreen from "../src/flat/SplashScreen";
 import { getUserData } from "../src/features/Authentication/authenticationSlice";
 import { RootState, store } from "../src/store";
+import theme from '../src/theme';
 
 interface MyAppProps {
   children: JSX.Element;
@@ -30,7 +31,7 @@ function MyApp({ children }: MyAppProps) {
     if (colorMode != "light") {
       toggleColorMode();
     }
-  }, []);
+  }, [colorMode]);
 
   useEffect(()=>{
     dispatch(getUserData());
@@ -44,7 +45,7 @@ function AppWrapper({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <Elements stripe={stripePromise}>
-          <ChakraProvider>
+          <ChakraProvider theme={theme}>
             <MyApp>
               <Layout>
                 <Component {...pageProps} />
