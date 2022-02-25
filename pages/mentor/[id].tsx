@@ -107,7 +107,7 @@ function Person({ icon, name, description, id }: PersonProps) {
           <Flex fontSize="xl" color="#565656" fontWeight="700">
             {name}
           </Flex>
-          <Flex fontSize="lg" marginTop={2} color="#565656">
+          <Flex fontSize="lg" marginTop={2} color="#565656" whiteSpace="pre-wrap">
             {description}
           </Flex>
         </Flex>
