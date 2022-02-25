@@ -69,6 +69,14 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Troosh QA</title>
+        <meta
+          name="description"
+          content="Troosh QA provides the fastest way for you ask a question and get a live answer by one of our mentors."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {isSmallerThan767 ? "" : <ProgressBar />}
       <Flex justifyContent="center">
         <Flex
@@ -132,7 +140,7 @@ function ExploreButton({ questionInputRef }: ExploreButtonProps) {
 
   const handleClick = () => {
     if (question.body.length >= 30) {
-      router.push("/when?view");
+      router.push("/when");
     } else {
       toast({
         description: getCharactersLeft(question),

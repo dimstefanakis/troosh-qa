@@ -205,7 +205,7 @@ function Mentor({ icon, name, expertise, description, id }: MentorProps) {
             <Flex fontSize="2xl" fontWeight="normal">
               {expertise}
             </Flex>
-            <Flex fontSize="xl" marginTop={2} color="#565656">
+            <Flex fontSize="xl" marginTop={2} color="#565656" whiteSpace="pre-wrap">
               {description}
             </Flex>
           </Flex>
