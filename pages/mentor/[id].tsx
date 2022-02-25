@@ -39,6 +39,8 @@ function Profile() {
     getMentor(id)
   );
 
+  console.log("data", data);
+
   async function getMentor(id: any) {
     if (id) {
       try {
@@ -68,9 +70,9 @@ function Profile() {
       <Box width="100%">
         <CheckoutButton rate={data.qa_session_credit} mentor={data} />
       </Box>
-      <Box mt="80px">
+      <Box mt="80px" minW="100%">
         <Expertise expertise={data.expertise_field} />
-        <CommonQuestions />
+        <CommonQuestions questions={data.common_questions} />
       </Box>
     </>
   ) : (
@@ -147,7 +149,7 @@ function Expertise({ expertise }: ExpertiseProps) {
   );
 }
 
-function CommonQuestions() {
+function CommonQuestions({ questions }: any) {
   const [isSmallerThan700] = useMediaQuery("(max-width:767px)");
 
   return (
@@ -166,7 +168,7 @@ function CommonQuestions() {
         justifyContent="space-between"
         marginLeft={isSmallerThan700 ? "15px" : "0px"}
       >
-        {askedQuestions.map((item, index) => {
+        {questions.map((item: any, index: number) => {
           return (
             <Flex key={index}>
               <Flex
@@ -183,7 +185,7 @@ function CommonQuestions() {
                   fontWeight="600"
                   width="100%"
                 >
-                  {item}
+                  {item.body}
                 </Text>
               </Flex>
             </Flex>
