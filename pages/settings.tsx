@@ -48,12 +48,20 @@ function TabsBtn() {
   const [isSmallerThan767] = useMediaQuery("(max-width:767px)");
   const router = useRouter();
 
-  const invClick = () => {
-    router.push("/settings?tab=invitation");
+  const profileClick = () => {
+    router.push("/settings?tab=profile");
   };
 
-  const profClick = () => {
-    router.push("/settings?tab=profile");
+  const paymentsClick = () => {
+    router.push("/settings?tab=payments");
+  };
+
+  const availabilityClick = () => {
+    router.push("/settings?tab=availability");
+  };
+
+  const metaClick = () => {
+    router.push("/settings?tab=meta");
   };
 
   return (
@@ -70,16 +78,16 @@ function TabsBtn() {
           paddingX="8px"
           paddingRight="60px"
         >
-          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+          <Tab maxH="50px" fontSize="xl" onClick={profileClick}>
             Profile
           </Tab>
-          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+          <Tab maxH="50px" fontSize="xl" onClick={paymentsClick}>
             Payments
           </Tab>
-          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+          <Tab maxH="50px" fontSize="xl" onClick={availabilityClick}>
             Availability
           </Tab>
-          <Tab maxH="50px" fontSize="xl" onClick={profClick}>
+          <Tab maxH="50px" fontSize="xl" onClick={metaClick}>
             Meta
           </Tab>
         </TabList>
