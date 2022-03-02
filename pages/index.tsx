@@ -197,7 +197,7 @@ function SearchButtons({ questionInputRef }: SearchButtonsProps) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   return {
     props: {
       seo: {
