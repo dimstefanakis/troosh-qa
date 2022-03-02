@@ -30,7 +30,7 @@ export default class Document extends NextDocument {
             content="Troosh QA. Find people to debug with you!"
           />
           <meta
-            name="twitter:image"
+            name="twitter:image:src"
             content="https://questions.troosh.app/logo_new.png"
           />
         </Head>
