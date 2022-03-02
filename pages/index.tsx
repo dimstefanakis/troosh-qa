@@ -34,7 +34,11 @@ interface ExploreButtonProps {
   questionInputRef: React.RefObject<HTMLTextAreaElement>;
 }
 
-const Home: NextPage = () => {
+interface HomeProps {
+  seo: any;
+}
+
+const Home = ({ seo }: HomeProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const toast = useToast();
@@ -78,15 +82,9 @@ const Home: NextPage = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="questions.troosh.app" />
         <meta property="twitter:url" content="https://questions.troosh.app/" />
-        <meta name="twitter:title" content="Troosh QA" />
-        <meta
-          name="twitter:description"
-          content="Troosh QA. Find people to debug with you!"
-        />
-        <meta
-          name="twitter:image"
-          content="https://questions.troosh.app/logo_new.png"
-        />
+        <meta name="twitter:title" content={seo.twitterTitle} />
+        <meta name="twitter:description" content={seo.twitterDescription} />
+        <meta name="twitter:image" content={seo.twitterImage} />
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -197,6 +195,18 @@ function SearchButtons({ questionInputRef }: SearchButtonsProps) {
       <ExploreButton questionInputRef={questionInputRef} />
     </Flex>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      seo: {
+        twitterTitle: "Troosh QA",
+        twitterDescription: "Troosh QA. Find people to debug with you!",
+        twitterImage: "https://questions.troosh.app/logo_new.png",
+      },
+    },
+  };
 }
 
 export default Home;
