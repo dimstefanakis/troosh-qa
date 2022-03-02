@@ -33,6 +33,10 @@ export default class Document extends NextDocument {
             name="twitter:image:src"
             content="https://questions.troosh.app/logo_new.png"
           />
+          <meta
+            name="twitter:image"
+            content="https://questions.troosh.app/logo_new.png"
+          />
         </Head>
         <body>
           {/* 👇 Here's the script */}
