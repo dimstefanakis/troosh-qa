@@ -82,7 +82,7 @@ function Results() {
   return (
     <Box w="100%">
       {isSmallerThan767 ? "" : <ProgressBar />}
-      <QuestionHeader expertise={query.data?.expertise} setSelectedExpertise={setSelectedExpertise}/>
+      {/* <QuestionHeader expertise={query.data?.expertise} setSelectedExpertise={setSelectedExpertise}/> */}
       {(!query.data || query.data.available_coaches.length == 0) &&
       !isWeak &&
       question.answer_needed_now ? (

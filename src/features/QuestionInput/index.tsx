@@ -46,8 +46,8 @@ function QuestionInput({ questionInputRef }: QuestionInputProps) {
         value={question.body}
         onChange={questionChange}
         as={ResizeTextarea}
-        // placeholder={`Ask something, it can be as specific as you want. The subjects we currently support are fitness and software development. `}
-        placeholder={`How can I do x? I need someone to help me with y.`}
+        // placeholder={`How can I do x? I need someone to help me with y.`}
+        placeholder={`How can I do x in react, currently trying y and it's not working.`}
         textAlign={question.body.length > 0 ? "start" : "center"}
         size=""
       />

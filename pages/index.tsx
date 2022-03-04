@@ -115,7 +115,7 @@ function QuestionHeader() {
       alignItems="center"
       textAlign="center"
     >
-      <Heading fontSize="3xl">
+      {/* <Heading fontSize="3xl">
         Got a question?
         <br /> Get answers from{" "}
         <Popover trigger="hover">
@@ -139,7 +139,8 @@ function QuestionHeader() {
             </PopoverBody>
           </PopoverContent>
         </Popover>
-      </Heading>
+      </Heading> */}
+      <Heading fontSize="3xl">Find people to debug with you</Heading>
     </Flex>
   );
 }
