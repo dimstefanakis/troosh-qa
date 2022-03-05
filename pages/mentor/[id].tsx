@@ -19,6 +19,7 @@ interface PersonProps {
 
 interface ExpertiseProps {
   expertise: string;
+  expertiseFields: string[];
 }
 
 let askedQuestions = [
@@ -71,7 +72,10 @@ function Profile() {
         <CheckoutButton rate={data.qa_session_credit} mentor={data} />
       </Box>
       <Box mt="80px" minW="100%">
-        <Expertise expertise={data.expertise_field} />
+        <Expertise
+          expertise={data.expertise_field}
+          expertiseFields={data.expertise_fields}
+        />
         <CommonQuestions questions={data.common_questions} />
       </Box>
     </>
@@ -107,7 +111,12 @@ function Person({ icon, name, description, id }: PersonProps) {
           <Flex fontSize="xl" color="#565656" fontWeight="700">
             {name}
           </Flex>
-          <Flex fontSize="lg" marginTop={2} color="#565656" whiteSpace="pre-wrap">
+          <Flex
+            fontSize="lg"
+            marginTop={2}
+            color="#565656"
+            whiteSpace="pre-wrap"
+          >
             {description}
           </Flex>
         </Flex>
@@ -116,7 +125,7 @@ function Person({ icon, name, description, id }: PersonProps) {
   );
 }
 
-function Expertise({ expertise }: ExpertiseProps) {
+function Expertise({ expertise, expertiseFields }: ExpertiseProps) {
   const [isSmallerThan700] = useMediaQuery("(max-width:767px)");
 
   return (
@@ -128,22 +137,28 @@ function Expertise({ expertise }: ExpertiseProps) {
       </Flex>
 
       <Flex width="100%" marginLeft={isSmallerThan700 ? "15px" : "0px"}>
-        <Box
-          backgroundColor="#FFD29B"
-          borderRadius="100px"
-          border="2px solid #000000"
-          marginTop="16px"
-        >
-          <Text
-            borderRadius="100%"
-            paddingY="8px"
-            paddingX="20px"
-            fontSize="15px"
-            fontWeight="600"
-          >
-            {expertise}
-          </Text>
-        </Box>
+        {expertiseFields.map((expertiseField: string, i: number) => {
+          return (
+            <Box
+              key={i}
+              backgroundColor="#FFD29B"
+              borderRadius="100px"
+              border="2px solid #000000"
+              marginTop="16px"
+              mr={2}
+            >
+              <Text
+                borderRadius="100%"
+                paddingY="8px"
+                paddingX="20px"
+                fontSize="15px"
+                fontWeight="600"
+              >
+                {expertiseField}
+              </Text>
+            </Box>
+          );
+        })}
       </Flex>
     </>
   );

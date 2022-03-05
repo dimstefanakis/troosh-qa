@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { Button } from "@chakra-ui/button";
 import { Flex, Image, Text, Box, LinkBox, LinkOverlay } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/layout";
+import { Tag } from "@chakra-ui/tag";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import ResultsSkeleton from "../src/flat/ResultsSkeleton";
 import ProgressBar from "../src/features/ProgressBar";
 import { setStep } from "../src/features/Progress/progressSlice";
 import PrimaryButton from "../src/flat/PrimaryButton";
 import TextLoader from "../src/flat/TextLoader";
-import SecondaryButton from "../src/flat/SecondaryButton";
-import useGetQuestionAvailableMentors from "../src/features/Question/hooks/useGetQuestionAvailableMentors";
 import { RootState } from "../src/store";
 import axios from "axios";
 import { useMediaQuery } from "@chakra-ui/react";
@@ -21,6 +21,7 @@ interface MentorProps {
   icon: string;
   name: string;
   expertise: string;
+  expertiseFields: string[];
   description: string;
   id: number;
 }
@@ -159,6 +160,7 @@ function Results() {
                     id={mentor.surrogate}
                     name={mentor.name}
                     expertise={mentor.expertise_field}
+                    expertiseFields={mentor.expertise_fields}
                     icon={mentor.avatar}
                     description={mentor.bio}
                   />
@@ -172,7 +174,7 @@ function Results() {
   );
 }
 
-function Mentor({ icon, name, expertise, description, id }: MentorProps) {
+function Mentor({ icon, name, expertise, expertiseFields, description, id }: MentorProps) {
   const router = useRouter();
 
   function onMentorClick() {
@@ -199,13 +201,32 @@ function Mentor({ icon, name, expertise, description, id }: MentorProps) {
             marginRight="20px"
           />
           <Flex flexDirection="column">
-            <Flex fontSize="lg" color="#565656" fontWeight="normal">
-              {name}
+            <Flex color="#565656" fontWeight="bold">
+              <Text fontSize="xl">{name}</Text>
             </Flex>
-            <Flex fontSize="2xl" fontWeight="normal">
-              {expertise}
-            </Flex>
-            <Flex fontSize="xl" marginTop={2} color="#565656" whiteSpace="pre-wrap">
+            <HStack mb={4} mt={1}>
+              {expertiseFields.map((expertiseField, i) => {
+                return (
+                  <Tag
+                    size="lg"
+                    fontWeight="bold"
+                    backgroundColor="#AAF0D1"
+                    color="black"
+                    key={i}
+                    borderRadius="full"
+                    variant="solid"
+                  >
+                    {expertiseField}
+                  </Tag>
+                );
+              })}
+            </HStack>
+            <Flex
+              fontSize="md"
+              marginTop={2}
+              color="#565656"
+              whiteSpace="pre-wrap"
+            >
               {description}
             </Flex>
           </Flex>
@@ -262,11 +283,11 @@ function QuestionHeader({
                 {expertise}
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => setSelectedExpertise("programming")}>
-                  Programming
+                <MenuItem onClick={() => setSelectedExpertise("react")}>
+                  React
                 </MenuItem>
-                <MenuItem onClick={() => setSelectedExpertise("fitness")}>
-                  Fitness
+                <MenuItem onClick={() => setSelectedExpertise("django")}>
+                  Django
                 </MenuItem>
               </MenuList>
             </Menu>
