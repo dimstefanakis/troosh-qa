@@ -144,12 +144,13 @@ function Results() {
                   <WeakResults />
                   <TryDifferentWording />
                 </Flex>
-              ) : (
+              ) : /*query.data.available_coaches.length == 0 &&
+                query.data.available_on_other_times == 0 ? (
                 <Flex flexFlow="column" alignItems="center" mt="90px">
                   <CouldntFindAvailableMentors />
                   <ChooseAnotherTime />
                 </Flex>
-              )
+              ) :*/ null
             ) : null}
           </Flex>
           <Flex flexFlow="column" width="100%">
