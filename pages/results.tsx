@@ -53,9 +53,9 @@ function Results() {
       if (question.id) {
         try {
           let url;
-          if(selectedExpertise){
+          if (selectedExpertise) {
             url = `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/?expertise=${selectedExpertise}`;
-          }else{
+          } else {
             url = `${process.env.NEXT_PUBLIC_API_URL}/v1/check_available_coaches_for_question/${question.id}/`;
           }
           let response = await axios.get(url);
@@ -83,7 +83,10 @@ function Results() {
   return (
     <Box w="100%">
       {isSmallerThan767 ? "" : <ProgressBar />}
-      <QuestionHeader expertise={query.data?.expertise} setSelectedExpertise={setSelectedExpertise}/>
+      <QuestionHeader
+        expertise={query.data?.expertise}
+        setSelectedExpertise={setSelectedExpertise}
+      />
       {(!query.data || query.data.available_coaches.length == 0) &&
       !isWeak &&
       question.answer_needed_now ? (
@@ -136,13 +139,16 @@ function Results() {
                   <CouldntProcessQuestion />
                   <AskAnotherQuestion />
                 </Flex>
+              ) : query.data.is_weak ? (
+                <Flex flexFlow="column" alignItems="center" mt="90px">
+                  <WeakResults />
+                  <TryDifferentWording />
+                </Flex>
               ) : (
-                query.data.is_weak && (
-                  <Flex flexFlow="column" alignItems="center" mt="90px">
-                    <WeakResults />
-                    <TryDifferentWording />
-                  </Flex>
-                )
+                <Flex flexFlow="column" alignItems="center" mt="90px">
+                  <CouldntFindAvailableMentors />
+                  <ChooseAnotherTime />
+                </Flex>
               )
             ) : null}
           </Flex>
@@ -174,7 +180,14 @@ function Results() {
   );
 }
 
-function Mentor({ icon, name, expertise, expertiseFields, description, id }: MentorProps) {
+function Mentor({
+  icon,
+  name,
+  expertise,
+  expertiseFields,
+  description,
+  id,
+}: MentorProps) {
   const router = useRouter();
 
   function onMentorClick() {
@@ -358,6 +371,16 @@ function CouldntProcessQuestion() {
     <Flex>
       <Text fontSize="xl" maxW="400px" textAlign="center">
         We could not process your question. Try rewording it!
+      </Text>
+    </Flex>
+  );
+}
+
+function CouldntFindAvailableMentors() {
+  return (
+    <Flex>
+      <Text fontSize="xl" maxW="400px" textAlign="center">
+        We could not find any available mentors during this time!
       </Text>
     </Flex>
   );
