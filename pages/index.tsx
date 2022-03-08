@@ -77,7 +77,7 @@ const Home = ({ seo }: HomeProps) => {
         <title>Troosh QA</title>
         <meta
           name="description"
-          content="Troosh QA. Find people to debug with you!"
+          content="Troosh QA. Find mentors to debug with you!"
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="questions.troosh.app" />
@@ -140,7 +140,7 @@ function QuestionHeader() {
           </PopoverContent>
         </Popover>
       </Heading> */}
-      <Heading fontSize="3xl">Find people to debug with you</Heading>
+      <Heading fontSize="3xl">Find mentors to debug with you</Heading>
     </Flex>
   );
 }
@@ -203,7 +203,7 @@ export async function getStaticProps() {
     props: {
       seo: {
         twitterTitle: "Troosh QA",
-        twitterDescription: "Troosh QA. Find people to debug with you!",
+        twitterDescription: "Troosh QA. Find mentors to debug with you!",
         twitterImage: "https://questions.troosh.app/logo_new.png",
       },
     },

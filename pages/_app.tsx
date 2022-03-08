@@ -13,6 +13,13 @@ import { getUserData } from "../src/features/Authentication/authenticationSlice"
 import { RootState, store } from "../src/store";
 import theme from '../src/theme';
 
+const LogRocket = require("logrocket");
+
+// only initialize when in the browser
+if (typeof window !== 'undefined') {
+  LogRocket.init("troosh-c7nqj/troosh-qa");
+}
+
 interface MyAppProps {
   children: JSX.Element;
 }

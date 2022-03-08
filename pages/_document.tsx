@@ -16,7 +16,7 @@ export default class Document extends NextDocument {
           <title>Troosh QA</title>
           <meta
             name="description"
-            content="Troosh QA. Find people to debug with you!"
+            content="Troosh QA. Find mentors to debug with you!"
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta property="twitter:domain" content="questions.troosh.app" />
@@ -27,7 +27,7 @@ export default class Document extends NextDocument {
           <meta name="twitter:title" content="Troosh QA" />
           <meta
             name="twitter:description"
-            content="Troosh QA. Find people to debug with you!"
+            content="Troosh QA. Find mentors to debug with you!"
           />
           <meta
             name="twitter:image:src"
