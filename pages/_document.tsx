@@ -1,5 +1,5 @@
 // pages/_document.js
-
+import Script from "next/script";
 import { ColorModeScript } from "@chakra-ui/react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import theme from "../src/theme";
@@ -40,21 +40,7 @@ export default class Document extends NextDocument {
           <script
             type="text/javascript"
             dangerouslySetInnerHTML={{
-              __html: `!function(e,t,n,s,u,a)
-            {e.twq ||
-              ((s = e.twq =
-                function () {
-                  s.exe ? s.exe.apply(s, arguments) : s.queue.push(arguments);
-                }),
-              (s.version = "1.1"),
-              (s.queue = []),
-              (u = t.createElement(n)),
-              (u.async = !0),
-              (u.src = "//static.ads-twitter.com/uwt.js"),
-              (a = t.getElementsByTagName(n)[0]),
-              a.parentNode.insertBefore(u, a))}
-            (window,document,'script'); // Insert Twitter Pixel ID and Standard
-            Event data below twq('init','o85tx'); twq('track','PageView');`,
+              __html: `!function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);},s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');twq('init','o85tx');twq('track','PageView');`,
             }}
           />
         </Head>
